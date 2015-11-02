@@ -1,8 +1,8 @@
 	<?php
 
 $db_type = 'mysqli';
-$db_host = 'mysql1.000webhost.com';
-$db_name = 'a3053249_sports';
-$db_username = 'a3053249_mathieu';
-$db_password = 'Spir@u38';
+$db_host = '127.3.194.2';
+$db_name = 'sports';
+$db_username = 'adminzXP1z8q';
+$db_password = 'yzkh2q_ENd81';
 ?>
