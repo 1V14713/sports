@@ -52,10 +52,10 @@ $country_code='France';
 $city_name='Grenoble';
 $token="pk.eyJ1IjoibWF0aGlldWdyYXZpbCIsImEiOiJobnZZZG5BIn0.WtRMrGCzpuD-d3JusE0zqQ";
 
-echo $ip ;echo"<br>";
-echo $_SERVER['HTTP_CLIENT_IP'];echo"<br>";
-echo $_SERVER['REMOTE_ADDR'];echo"<br>";
-echo $_SERVER['HTTP_X_FORWARDED_FOR'];echo"<br>";
+echo "REMOTE_ADDR : ".$ip ;echo"<br>";
+echo "HTTP_CLIENT_IP : ".$_SERVER['HTTP_CLIENT_IP'];echo"<br>";
+echo "REMOTE_ADDR : ".$_SERVER['REMOTE_ADDR'];echo"<br>";
+echo "HTTP_X_FORWARDED_FOR : ".$_SERVER['HTTP_X_FORWARDED_FOR'];echo"<br>";
 //$url_location_of_ip="http://www.geoplugin.net/php.gp?ip=".$ip ;
 $url_location_of_ip="http://api.hostip.info/get_html.php?ip=".$ip."&position=true";
 echo $url;echo"<br>";
