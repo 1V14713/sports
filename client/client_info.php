@@ -71,12 +71,12 @@ echo"http://api.hostip.info/get_html.php?ip=".$ip."&position=true"
 //Latitude: 45.1833 Longitude: 5.7833 IP
 $temp=explode(":",$location);
 $temp2=explode("L",$temp[3]);
-$lat1=trim($temp2[0]," \x00..\x1F");
+$lat=trim($temp2[0]," \x00..\x1F");
 $temp2=explode("I", $temp[4]);
-$lon1=trim($temp2[0]," \x00..\x1F");
+$lon=trim($temp2[0]," \x00..\x1F");
 
 //============================================================
-require_once('../geoplugin.class/geoplugin.class.php');
+/*require_once('../geoplugin.class/geoplugin.class.php');
 $geoplugin = new geoPlugin();
 $geoplugin->locate();
 $lon=$geoplugin->longitude ;
@@ -95,8 +95,8 @@ echo "Geolocation results for {$geoplugin->ip}: <br />\n".
 	"Currency Symbol: {$geoplugin->currencySymbol} <br />\n".
 	"Exchange Rate: {$geoplugin->currencyConverter} <br />\n";
 //============================================================
-
-
+*/
+/*
 $url_precise_location1="http://api.tiles.mapbox.com/v4/geocode/mapbox.places/".$lon1.",".$lat1.".json?access_token=".$token ;
 echo $url_precise_location1;echo"<br>";
 $url_map1="http://api.tiles.mapbox.com/v4/mapbox.comic/".$lon1",".$lat1.",14/500x300.png?access_token=".$token ;
@@ -117,7 +117,7 @@ $json_string1 = file_get_contents("http://api.wunderground.com/api/c626379aef268
   $location1 = $parsed_json1->{'location'}->{'city'};
   $temp_c1 = $parsed_json1->{'current_observation'}->{'temp_c'};
   echo "Current temperature in ${location1} is: ${temp_c1} °C\n";
-
+*/
 
 $url_precise_location="http://api.tiles.mapbox.com/v4/geocode/mapbox.places/".$lon.",".$lat.".json?access_token=".$token ;
 echo $url_precise_location;echo"<br>";
