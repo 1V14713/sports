@@ -62,7 +62,7 @@ echo $url;echo"<br>";
 $location = file_get_contents($url_location_of_ip);
 echo $location;echo"<br>";
 echo"<A HREF=\"http://www.hostip.info\"> <IMG SRC=\"http://api.hostip.info/flag.php?ip=".$ip." ALT=\"IP Address Lookup\"></A>";echo"<br>";
-echo"http://api.hostip.info/get_html.php?ip=".$ip."&position=true"
+echo"http://api.hostip.info/get_html.php?ip=".$ip."&position=true";
 
 
 
