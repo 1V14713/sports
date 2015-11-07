@@ -73,7 +73,7 @@ $temp=explode(":",$location);
 $temp2=explode("L",$temp[3]);
 $lat1=trim($temp2[0]," \x00..\x1F");
 $temp2=explode("I", $temp[4]);
-$lon2=trim($temp2[0]," \x00..\x1F");
+$lon1=trim($temp2[0]," \x00..\x1F");
 
 //============================================================
 require_once('../geoplugin.class/geoplugin.class.php');
@@ -101,7 +101,6 @@ $url_precise_location1="http://api.tiles.mapbox.com/v4/geocode/mapbox.places/".$
 echo $url_precise_location1;echo"<br>";
 $url_map1="http://api.tiles.mapbox.com/v4/mapbox.comic/".$lon1",".$lat1.",14/500x300.png?access_token=".$token ;
 echo"<img src=".$url_map1." alt=map />";
-/*
 $url_weather_from_lat1_long1="http://api.wunderground.com/auto/wui/geo/GeoLookupXML/index.xml?query=".$lat1.",".$lon1 ;
 $xml_weather1=simplexml_load_string(file_get_contents($url_weather_from_lat1_long1));
 xml2html($xml_weather1);
@@ -118,7 +117,6 @@ $json_string1 = file_get_contents("http://api.wunderground.com/api/c626379aef268
   $location1 = $parsed_json1->{'location'}->{'city'};
   $temp_c1 = $parsed_json1->{'current_observation'}->{'temp_c'};
   echo "Current temperature in ${location1} is: ${temp_c1} °C\n";
-*/
 
 
 $url_precise_location="http://api.tiles.mapbox.com/v4/geocode/mapbox.places/".$lon.",".$lat.".json?access_token=".$token ;
