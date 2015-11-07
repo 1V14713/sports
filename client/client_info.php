@@ -52,16 +52,17 @@ $country_code='France';
 $city_name='Grenoble';
 $token="pk.eyJ1IjoibWF0aGlldWdyYXZpbCIsImEiOiJobnZZZG5BIn0.WtRMrGCzpuD-d3JusE0zqQ";
 
-//echo $ip ;echo"<br>";
-//echo $_SERVER['HTTP_CLIENT_IP'];echo"<br>";
-//echo $_SERVER['REMOTE_ADDR'];echo"<br>";
-//echo $_SERVER['HTTP_X_FORWARDED_FOR'];echo"<br>";
-$url_location_of_ip="http://www.geoplugin.net/php.gp?ip=".$ip ;
-//$url_location_of_ip="http://api.hostip.info/get_html.php?ip=".$ip."&position=true";
-//echo $url;echo"<br>";
+echo $ip ;echo"<br>";
+echo $_SERVER['HTTP_CLIENT_IP'];echo"<br>";
+echo $_SERVER['REMOTE_ADDR'];echo"<br>";
+echo $_SERVER['HTTP_X_FORWARDED_FOR'];echo"<br>";
+//$url_location_of_ip="http://www.geoplugin.net/php.gp?ip=".$ip ;
+$url_location_of_ip="http://api.hostip.info/get_html.php?ip=".$ip."&position=true";
+echo $url;echo"<br>";
 $location = file_get_contents($url_location_of_ip);
 echo $location;echo"<br>";
 echo"<A HREF=\"http://www.hostip.info\"> <IMG SRC=\"http://api.hostip.info/flag.php?ip=".$ip." ALT=\"IP Address Lookup\"></A>";echo"<br>";
+echo"http://api.hostip.info/get_html.php?ip=".$ip."&position=true"
 
 
 
@@ -70,9 +71,9 @@ echo"<A HREF=\"http://www.hostip.info\"> <IMG SRC=\"http://api.hostip.info/flag.
 //Latitude: 45.1833 Longitude: 5.7833 IP
 $temp=explode(":",$location);
 $temp2=explode("L",$temp[3]);
-$lat=trim($temp2[0]," \x00..\x1F");
+$lat1=trim($temp2[0]," \x00..\x1F");
 $temp2=explode("I", $temp[4]);
-$lon=trim($temp2[0]," \x00..\x1F");
+$lon2=trim($temp2[0]," \x00..\x1F");
 
 //============================================================
 require_once('../geoplugin.class/geoplugin.class.php');
@@ -96,18 +97,36 @@ echo "Geolocation results for {$geoplugin->ip}: <br />\n".
 //============================================================
 
 
+$url_precise_location1="http://api.tiles.mapbox.com/v4/geocode/mapbox.places/".$lon1.",".$lat1.".json?access_token=".$token ;
+echo $url_precise_location1;echo"<br>";
+$url_map1="http://api.tiles.mapbox.com/v4/mapbox.comic/".$lon1",".$lat1.",14/500x300.png?access_token=".$token ;
+echo"<img src=".$url_map1." alt=map />";
+$url_weather_from_lat1_long1="http://api.wunderground.com/auto/wui/geo/GeoLookupXML/index.xml?query=".$lat1.",".$lon1 ;
+$xml_weather1=simplexml_load_string(file_get_contents($url_weather_from_lat1_long1));
+xml2html($xml_weather1);
+$myurl1=getvalue($xml_weather1,"wuiurl");
+echo"<a href=".$myurl1."> Go to site</a>";
+$wsdl_weather1="http://www.webservicex.net/globalweather.asmx?WSDL";
+$client_weather1 = new SoapClient($wsdl_weather1, array('trace' => 1));
+$res_weather1 = $client_weather1->GetWeather(array('CityName' => $city_name , 'CountryName'=>$country_code));
+echo"<br>";
+$xml_weather21=simplexml_load_string($res_weather1->GetWeatherResult);
+xml2html($xml_weather21);
+$json_string1 = file_get_contents("http://api.wunderground.com/api/c626379aef26852f/geolookup/conditions/q/".$lat1.",".$lon1.".json");
+  $parsed_json1 = json_decode($json_string1);
+  $location1 = $parsed_json1->{'location'}->{'city'};
+  $temp_c1 = $parsed_json1->{'current_observation'}->{'temp_c'};
+  echo "Current temperature in ${location1} is: ${temp_c1} °C\n";
 
 
 
 $url_precise_location="http://api.tiles.mapbox.com/v4/geocode/mapbox.places/".$lon.",".$lat.".json?access_token=".$token ;
 echo $url_precise_location;echo"<br>";
-
 //$precise_location=file_get_contents($url_precise_location);
 echo htmlspecialchars($precise_location);echo"<br>";
-
 $url_map="http://api.tiles.mapbox.com/v4/mapbox.comic/".$lon.",".$lat.",14/500x300.png?access_token=".$token ;
- 
 echo"<img src=".$url_map." alt=map />";
+
 //echo"<img src=\"http://api.wunderground.com/api/c626379aef26852f/radar/q/autoip.gif\" alt=mpa />";
 
 $url_weather_from_lat_long="http://api.wunderground.com/auto/wui/geo/GeoLookupXML/index.xml?query=".$lat.",".$lon ;
