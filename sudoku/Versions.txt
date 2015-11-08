@@ -1,0 +1,87 @@
+----------------------------------------------------------------------------------------
+# Version 0.9
+-> Simple générateur de grilles de sudoku
+
+Fichier : sudoku_PHP-0.9.zip
+----------------------------------------------------------------------------------------
+
+# Version 1.0
+-> Correcteur en ligne avec affichage du nombre d'erreurs.
+-> Utilisation des sessions
+-> Refresh de la page si le calcul d'une grille est trop long (Correction bug)
+
+Fichier : sudoku_PHP-1.0.zip
+
+----------------------------------------------------------------------------------------
+
+# Version 1.1
+-> Ajout d'un chronometre
+
+Fichier : sudoku_PHP-1.1.zip
+
+----------------------------------------------------------------------------------------
+
+# Version 1.2
+-> Affichage de la solution
+
+Fichier : sudoku_PHP-1.2.zip
+
+----------------------------------------------------------------------------------------
+
+# Version 1.3
+-> Correction affichage 
+
+Fichier : sudoku_PHP-1.3.zip
+
+----------------------------------------------------------------------------------------
+
+# Version 1.4
+-> Insertion d'un générateur de grilles pleines. Nombre de sudoku : illimité ! 
+
+Fichier : sudoku_PHP-1.4.zip
+
+----------------------------------------------------------------------------------------
+# Version 1.5
+-> grilles 4*4; 6*6; et 9*9
+-> Suppression test javascript + barre de progression
+
+Fichier : sudoku_PHP-1.4.zip
+
+----------------------------------------------------------------------------------------
+# Version 1.6
+-> grilles 4*4; 6*6; et 9*9 et 10*10 12*12 14*14 16*16
+-> Suppression test javascript + barre de progression
+->Débugage affichage grille
+
+Fichier : sudoku_PHP-1.4.zip
+
+----------------------------------------------------------------------------------------
+# Version 1.8
+-> Ajout type sudoku symbole (lettres)
+
+Fichier : sudoku_PHP-1.8.zip
+
+----------------------------------------------------------------------------------------
+# Version 1.9
+> Valid XHTML 1.0 Transitional -> Fichier exemple.php pour integrer le sudoku sur son site -> Optimisation du code
+
+Fichier : sudoku_PHP-1.9.zip
+
+----------------------------------------------------------------------------------------
+
+# Version 2.0
+> Niveau de difficulté
+  Facile --> Déduction par valeurs interdites
+  Moyen  --> Déduction par valeurs interdites + deduction par valeurs possibles ("solitaire nu" visible ou caché)
+  Difficile -> Même méthodes que pour facile et moyen + deduction par PairesNues (verticale et horyzontale)
+Fichier : sudoku_PHP-2.0.zip
+
+----------------------------------------------------------------------------------------
+# Version 2.1
+> Niveau de difficulté
+  Facile --> Déduction par valeurs interdites
+  Moyen  --> Déduction par valeurs interdites + deduction par valeurs possibles ("solitaire nu" visible ou caché)+ deduction par PairesNues visibles (zone, verticale et horyzontale)
+  Difficile -> Même méthodes que pour facile et moyen + deduction par PairesNues cachées (zones + verticale et horyzontale)
+Fichier : sudoku_PHP-2.0.zip
+
+----------------------------------------------------------------------------------------

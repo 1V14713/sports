@@ -1,0 +1,24 @@
+Copyright © Nicolas Lion, 17/04/2008
+Email : nicolas@lioninformatique.com
+Site : http://www.lioninformatique.com
+
+
+# Niveau de difficulté est régi par la méthode de résolution
+
+  Facile --> Déduction par valeurs interdites
+  Moyen  --> Déduction par valeurs interdites + deduction par valeurs possibles ("solitaire nu" visible ou caché) + deduction paires nu visible
+  Difficile -> Même méthodes que pour facile et moyen + deduction par PairesNues cachées (verticale, horyzontale,zone)
+  
+  Chaque méthode de résolution possède un indice de difficulté. Plus la somme des indices est élevés pour résoudre le sudoku plus le niveau est difficile.  
+
+  Les fonctions de résolutions peuvent être optimisées... Certaines méthodes de résolution sont manquantes.	
+  Les methodes de resolutions choisies sont des raisonements humain pour être sûre de la logique de résolution !
+
+ 
+# Pour installer le jeu, il vous suffit de transférer les fichiers sur votre hébergement. 
+Vous avez la possibilité de changer les couleurs et la taille des polices du jeu, pour cela, consultez le fichier config
+
+# Si vous installez l'application sur un hébergement free, n'oubliez pas de créer un dossier sessions à la racine de votre site.
+
+# Le fichier exemple.php peut vous servir pour l'integration de l'application.
+
