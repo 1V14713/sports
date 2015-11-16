@@ -106,23 +106,58 @@ function backup_tables($host,$user,$pass,$name,$tables = '*')
 		$return.= 'DROP TABLE '.$table.';';
 		$row2 = mysql_fetch_row(mysql_query('SHOW CREATE TABLE '.$table));
 		$return.= "\n\n".$row2[1].";\n\n";
-
-		for ($i = 0; $i < $num_fields; $i++)
+		if (mysql_num_rows($result)!= 0 )
 		{
-		while($row = mysql_fetch_row($result))
-		{
-		$return.= 'INSERT INTO '.$table.' VALUES(';
+			$return.= 'INSERT INTO '.$table.'  (';
+            $result2 = mysql_query('SHOW COLUMNS from '.$table);
+			$num  = mysql_num_rows($result2);
+			$i=1;
+			while($row = mysql_fetch_row($result2))
+			{
+				if ($i < $num )
+				{
+					$return.= $row[0].', ';
+					$i=$i+1;
+				}
+				else
+				{
+					$return.= $row[0].') VALUES  ';
+				}
+			}
+			$k=1;
+			while($row = mysql_fetch_row($result))
+			{
+				if ($k <  mysql_num_rows($result))
+				{
+				$return.= '(';
 				for($j=0; $j<$num_fields; $j++)
 				{
-				$row[$j] = addslashes($row[$j]);
-				$row[$j] = ereg_replace("\n","\\n",$row[$j]);
-				if (isset($row[$j])) { $return.= '"'.$row[$j].'"' ; } else { $return.= '""'; }
-				if ($j<($num_fields-1)) { $return.= ','; }
+					$row[$j] = addslashes($row[$j]);
+					$row[$j] = ereg_replace("\n","\\n",$row[$j]);
+					if (isset($row[$j])) { $return.= '"'.$row[$j].'"' ; } else { $return.= '""'; }
+					if ($j<($num_fields-1)) { $return.= ','; }
 				}
-				$return.= ");\n";
-		}
-		}
+				$return.= "),\n";
+				$k=$k+1;
+				}
+				else
+				{
+				$return.= '(';
+				for($j=0; $j<$num_fields; $j++)
+				{
+					$row[$j] = addslashes($row[$j]);
+					$row[$j] = ereg_replace("\n","\\n",$row[$j]);
+					if (isset($row[$j])) { $return.= '"'.$row[$j].'"' ; } else { $return.= '""'; }
+					if ($j<($num_fields-1)) { $return.= ','; }
+				}
+				$return.= ");\n";	
+				}
+			}
+            
+			
+		
 		$return.="\n\n\n";
+		}
 	}
 print $return ;
 	//save file
@@ -461,3 +496,4 @@ function random_color()
 	return $c;
 }
 
+	
