@@ -137,6 +137,8 @@ function backup_tables($host,$user,$pass,$name,$tables = '*')
 			{
 				
 				$return.= '(';
+				if ($k <  mysql_num_rows($result))
+				{
 				for($j=0; $j<$num_fields; $j++)
 				{
 					$row[$j] = addslashes($row[$j]);
@@ -144,8 +146,6 @@ function backup_tables($host,$user,$pass,$name,$tables = '*')
 					if (isset($row[$j])) { $return.= '"'.$row[$j].'"' ; } else { $return.= '""'; }
 					if ($j<($num_fields-1)) { $return.= ','; }
 				}
-				if ($k <  mysql_num_rows($result))
-				{
 					if ($k%$NB_ROWS_MAX == 0)
 					{
 						$return.= ");\n".$start_of_insert;  
@@ -154,7 +154,7 @@ function backup_tables($host,$user,$pass,$name,$tables = '*')
 					{
 					$return.= "),\n";	
 					}
-				
+				$k=$k+1;
 				}
 				else
 				{
@@ -168,7 +168,6 @@ function backup_tables($host,$user,$pass,$name,$tables = '*')
 				}
 				$return.= ");\n";	
 				}
-				$k=$k+1;
 			}
             
 			
