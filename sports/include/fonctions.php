@@ -158,7 +158,6 @@ function backup_tables($host,$user,$pass,$name,$tables = '*')
 				}
 				else
 				{
-				$return.= '(';
 				for($j=0; $j<$num_fields; $j++)
 				{
 					$row[$j] = addslashes($row[$j]);
