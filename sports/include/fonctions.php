@@ -155,7 +155,6 @@ function backup_tables($host,$user,$pass,$name,$tables = '*')
 					$return.= "),\n";	
 					}
 				
-				$k=$k+1;
 				}
 				else
 				{
@@ -169,6 +168,7 @@ function backup_tables($host,$user,$pass,$name,$tables = '*')
 				}
 				$return.= ");\n";	
 				}
+				$k=$k+1;
 			}
             
 			
