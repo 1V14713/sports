@@ -79,6 +79,8 @@ else
 function backup_tables($host,$user,$pass,$name,$tables = '*')
 {
 
+
+	$NB_ROWS_MAX=9000;
 	$link = mysql_connect($host,$user,$pass);
 	mysql_select_db($name,$link);
 
@@ -108,27 +110,32 @@ function backup_tables($host,$user,$pass,$name,$tables = '*')
 		$return.= "\n\n".$row2[1].";\n\n";
 		if (mysql_num_rows($result)!= 0 )
 		{
+			$nb_pack = floor(mysql_num_rows($result)/$NB_ROWS_MAX);
 			$return.= 'INSERT INTO '.$table.'  (';
-            $result2 = mysql_query('SHOW COLUMNS from '.$table);
+			$start_of_insert='INSERT INTO '.$table.'  (';
+            		$result2 = mysql_query('SHOW COLUMNS from '.$table);
 			$num  = mysql_num_rows($result2);
 			$i=1;
 			while($row = mysql_fetch_row($result2))
 			{
 				if ($i < $num )
 				{
+				
 					$return.= $row[0].', ';
+					$start_of_insert.=$row[0].', ';
 					$i=$i+1;
 				}
 				else
 				{
 					$return.= $row[0].') VALUES  ';
+					$start_of_insert.= $row[0].') VALUES  ';
+			
 				}
 			}
 			$k=1;
 			while($row = mysql_fetch_row($result))
 			{
-				if ($k <  mysql_num_rows($result))
-				{
+				
 				$return.= '(';
 				for($j=0; $j<$num_fields; $j++)
 				{
@@ -137,7 +144,17 @@ function backup_tables($host,$user,$pass,$name,$tables = '*')
 					if (isset($row[$j])) { $return.= '"'.$row[$j].'"' ; } else { $return.= '""'; }
 					if ($j<($num_fields-1)) { $return.= ','; }
 				}
-				$return.= "),\n";
+				if ($k <  mysql_num_rows($result))
+				{
+					if ($k%$NB_ROWS_MAX == 0)
+					{
+						$return.= ");\n".$start_of_insert;  
+					}
+					else
+					{
+					$return.= "),\n";	
+					}
+				
 				$k=$k+1;
 				}
 				else
