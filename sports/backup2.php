@@ -16,11 +16,11 @@ $zip = new ZipArchive();
  $zip->addFile($file_path.$file,$file);
 $zip->close();
     //then send the headers to foce download the zip file
-    header("Content-type: application/zip"); 
-    header("Content-Disposition: attachment; filename=$archive_file_name"); 
-    header("Pragma: no-cache"); 
-    header("Expires: 0"); 
-    readfile("$archive_file_name");
+//    header("Content-type: application/zip"); 
+//    header("Content-Disposition: attachment; filename=$archive_file_name"); 
+//    header("Pragma: no-cache"); 
+//    header("Expires: 0"); 
+ //   readfile("$archive_file_name");
     
 ?>
 
