@@ -1,0 +1,43 @@
+tr:hover {background-color:#F8FE2E}
+tr#natation{
+    background-color: #CEF6F5;
+    color: black;
+}
+tr#natation:hover {background-color: #F7FE2E}
+tr#velo{
+    background-color: #BCF5A9;
+    color: black;
+}
+tr#Footing{
+    background-color: #F5DA81;
+    color: black;
+}
+tr#Footing:hover {background-color: #F7FE2E}
+tr#escalade{
+    background-color: #E6E6E6;
+    color: black;
+}
+tr#musculation{
+    background-color:#F79F81;
+    color: black;
+}
+tr#musculation:hover {background-color: #F7FE2E}
+tr#Skating{
+    background-color: #A9BCF5;
+    color: black;
+}
+tr#Rando{
+    background-color: #FF8000;
+    color: black;
+}
+tr#Rando:hover {background-color: #F7FE2E}
+tr#Ski_de_rando{
+    background-color: #F6CEF5;
+    color: black;
+}
+tr#Ski_de_Rando:hover {background-color: #F7FE2E}
+tr#SKI_ALPIN{
+    background-color: #F6CEF5;
+    color: black;
+}
+tr#SKI_ALPIN:hover {background-color: #F7FE2E}

@@ -6,7 +6,7 @@
 
    </HEAD>
  <style type="text/css" src=style.css></style>
-<script type="text/javascript" src=include/calendar.js>	</script>
+
 	   	
  
 
@@ -18,6 +18,12 @@ require PUN_ROOT.'include/ExportExcel.php';
 
 $start='1981/06/14';
 $end=date("Y/m/d");
+$fseuil=150 ;
+// $datetime1=new DateTime('1981-06-14');
+$Tca=7;
+$Tcc=42;
+$atl_b=0;
+$ctl_b=0;
 
 if (isset($_POST['start']))
 {
@@ -64,19 +70,19 @@ $all_selected = 1;
 $list_sports = "'". implode("', '", $sports) ."'";
 
 $query="select seance_id, name, sport_name, date, calories, distance, duration, 
-		fat_consumption, above, average, below, in_zone, lower, maximum, 
-		upper, Vaverage, Vmaximum , altitude
+		format(average/$fseuil,2)  , format((100*TIME_TO_SEC(duration)*average*average/$fseuil)/(3600*$fseuil),2), average, maximum, 
+		 Vaverage, Vmaximum , altitude
 from seances, sport_type 
 Where seances.sport_id = sport_type.sport_id
 AND seances.date <= date_format('$end','%Y/%m/%d')
 AND seances.date >= date_format('$start','%Y/%m/%d')
 AND seances.sport_id IN ($list_sports )
-order by date desc;";
+order by date asc;";
 
 
 echo "<H1>Liste sur la periode du $start au  $end </H1>" ;
 
-print"<form action=\"Liste.php\" method=\"post\">";
+print"<form action=\"Listev2.php\" method=\"post\">";
 printf("<table border=2>\n
 <TR>\n
 <TD> First day </TD>\n<TD><Input name=\"start\" type=\"date\"   value=\"%s\" size=\"8\"/> </TD>\n<TD> Last day </TD>\n
@@ -225,8 +231,7 @@ mysql_to_html_table($link, $querysum3, $header3) ;
 
 print "<TABLE border=2><TR>
 <TD>name</TD><TD>sport</TD><TD>date</TD><TD>cal</TD><TD>dist</TD><TD>duration</TD><TD> 
-		%fat</TD><TD>above</TD><TD>average</TD><TD>below</TD><TD>in_zone</TD><TD> 
-		lower</TD><TD>maximum</TD><TD>upper</TD><TD>Vaverage</TD><TD>Vmaximum </TD><TD>altitude</TD>
+		IF</TD><TD>TSS</TD><TD>Fmoy</TD><TD>Fmax</TD><TD>Vaverage</TD><TD>Vmaximum </TD><TD>ATL</TD><TD>CTL</TD><TD>TSB</TD>
 		<TD>&nbsp</TD>
 		</TR>";
 
@@ -234,19 +239,60 @@ $result = mysql_query($query) or die("La requete  $query a echouee");
 $num_rows = mysql_num_rows($result);
 echo "$num_rows Rows\n";
 		
+$k=1;	
 
 while ($row = mysql_fetch_array($result, MYSQL_NUM))
 {
+	if ($k == 1 )
+	{	
+	$datetime1=new DateTime($row[3]);
+	}
+$current_date=new DateTime($row[3]);
+$interval = $datetime1->diff($current_date);
+	$m=$interval->format('%a');
+	$temp=$datetime1;
+	for ( $i = 1 ; $i<$m ; $i++ )
+	{
+		$atl= $atl_b - $atl_b/$Tca;
+		$ctl= $ctl_b - $ctl_b/$Tcc;
+	$tsb = number_format($ctl - $atl, 2) ;
+	$atl_b=$atl ;
+	$ctl_b=$ctl;
+	$atl2=number_format($atl, 2);
+	$ctl2=number_format($ctl, 2);
+	$tsb = number_format($ctl - $atl, 2) ;
+
+	$temp= $temp->add(new DateInterval('P1D'));
+	$temp2=$temp->format('Y-m-d') ;
+
+	}
+
+
+$atl= $atl_b+($row[8]-$atl_b)/$Tca;
+$ctl= $ctl_b +($row[8]-$ctl_b)/$Tcc;
+$tsb = number_format($ctl - $atl, 2) ;
+$atl_b=$atl ;
+$ctl_b=$ctl;
+$atl2=number_format($atl, 2);
+$ctl2=number_format($ctl, 2);
+$datetime1=$current_date;
+
+$tss= number_format($row[8], 2);
+$if=number_format($row[7], 2);
+$temp2=$current_date->format('Y-m-d') ;
+
 print"<form action=\"Voir.php\" method=\"post\">";
 printf("<input type=\"hidden\" name=\"seance_id\" value=\"%s\">",$row[0]);
 $toto=str_replace(' ','_',$row[2]);
 echo"<TR id=\"$toto\">
 <TD>$row[1]</TD><TD>$row[2]</TD><TD>$row[3]</TD><TD>$row[4]</TD><TD>$row[5]</TD><TD>$row[6]</TD><TD>
-$row[7]</TD><TD>$row[8]</TD><TD>$row[9]</TD><TD>$row[10]</TD><TD>$row[11]</TD><TD>$row[12]</TD><TD>$row[13]</TD><TD>
-$row[14]</TD><TD>$row[15]</TD><TD>$row[16]</TD><TD>$row[17]</td><TD><INPUT TYPE=\"SUBMIT\" VALUE=\"Voir\"/></TD>
+$row[7]</TD><TD>$row[8]</TD><TD>$row[9]</TD><TD>$row[10]</TD><TD>$row[11]</TD><TD>$row[12]</TD>
+<TD>$atl2</TD><TD>$ctl2</TD><TD>$tsb</TD>
+<TD><INPUT TYPE=\"SUBMIT\" VALUE=\"Voir\"/></TD>
 
 </TR>" ;
 print"</form>";
+ $k=$k+1;
 }
 print "</TABLE>";
 
@@ -257,4 +303,3 @@ mysql_close($link);
 
 	   </BODY>
  </HTML>
-
