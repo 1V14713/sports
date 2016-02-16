@@ -8,6 +8,7 @@ tr#velo{
     background-color: #BCF5A9;
     color: black;
 }
+tr#velo:hover {background-color: #F7FE2E}
 tr#Footing{
     background-color: #F5DA81;
     color: black;
@@ -17,6 +18,7 @@ tr#escalade{
     background-color: #E6E6E6;
     color: black;
 }
+tr#escalade:hover {background-color: #F7FE2E}
 tr#musculation{
     background-color:#F79F81;
     color: black;
@@ -26,6 +28,7 @@ tr#Skating{
     background-color: #A9BCF5;
     color: black;
 }
+tr#Skating:hover {background-color: #F7FE2E}
 tr#Rando{
     background-color: #FF8000;
     color: black;
