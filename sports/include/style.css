@@ -1,46 +1,63 @@
-tr:hover {background-color:#F8FE2E}
+
 tr#natation{
     background-color: #CEF6F5;
     color: black;
 }
 tr#natation:hover {background-color: #F7FE2E}
+div#natation{     background-color: #CEF6F5;}
+
 tr#velo{
     background-color: #BCF5A9;
     color: black;
 }
 tr#velo:hover {background-color: #F7FE2E}
+div#velo{    background-color: #BCF5A9;}
+
 tr#Footing{
     background-color: #F5DA81;
     color: black;
 }
+div#Footing{    background-color: #F5DA81;}
 tr#Footing:hover {background-color: #F7FE2E}
+
 tr#escalade{
     background-color: #E6E6E6;
     color: black;
 }
+div#escalade{    background-color: #E6E6E6;}
 tr#escalade:hover {background-color: #F7FE2E}
+
 tr#musculation{
     background-color:#F79F81;
     color: black;
 }
+div#musculation{    background-color:#F79F81;}
 tr#musculation:hover {background-color: #F7FE2E}
+
 tr#Skating{
     background-color: #A9BCF5;
     color: black;
 }
+div#Skating{    background-color: #A9BCF5;}
 tr#Skating:hover {background-color: #F7FE2E}
+
 tr#Rando{
     background-color: #FF8000;
     color: black;
 }
+div#Rando{    background-color: #FF8000;}
 tr#Rando:hover {background-color: #F7FE2E}
+
 tr#Ski_de_rando{
     background-color: #F6CEF5;
     color: black;
 }
+div#Ski_de_rando{    background-color: #F6CEF5;}
 tr#Ski_de_Rando:hover {background-color: #F7FE2E}
+
 tr#SKI_ALPIN{
     background-color: #F6CEF5;
     color: black;
 }
+div#SKI_ALPIN{    background-color: #F6CEF5;}
 tr#SKI_ALPIN:hover {background-color: #F7FE2E}
