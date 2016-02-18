@@ -36,18 +36,23 @@ function mysql_to_graph_multiline($dbconnect, $sqlrequest, $HEADER, $title , $na
 
 function mysql_to_html_table($dbconnect, $sqlrequest, $HEADER)
 {
-	print "<table border=1>";
-	print "<TR>";
+	print "<table border=1 id=\"$HEADER[0]\"class=\"tablesorter\"><thead>";
+
 if (is_array($HEADER))
 {
+	print "<TR>";
 	for ($i= 0 ; $i < count($HEADER) ; $i++)
 	{
 
-		print "<TD> <b> $HEADER[$i]</b> </TD>";
+		print "<th> <b> $HEADER[$i]</b> </th>";
 	}
+	print "</TR></thead>";
+
 }
 else 
 {
+	print "<tbody><TR>";
+
 	$select_field = explode ( "FROM", $sqlrequest);
 	$fields = explode(",", $select_field[0]);
 	for ($i= 1 ; $i < count($fields) ; $i++)
@@ -71,7 +76,7 @@ else
 		}
 		print "</TR>";
 	}
-	print "</table>";
+	print "</tbody></table>";
 	
 }
 
@@ -174,11 +179,13 @@ function backup_tables($host,$user,$pass,$name,$tables = '*')
 		$return.="\n\n\n";
 		}
 	}
-print $return ;
+//print $return ;
 	//save file
-//		$handle = fopen('db-backup-'.time().'-'.(md5(implode(',',$tables))).'.sql','w+');
-//	fwrite($handle,$return);
-//	fclose($handle);
+		//$handle = fopen('db-backup-'.time().'-'.(md5(implode(',',$tables))).'.sql','w+');
+$handle = fopen('db-backup.sql','w+');
+
+	fwrite($handle,$return);
+	fclose($handle);
 }
 
 function connect_db($db_host, $db_username, $db_password, $db_name)

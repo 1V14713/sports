@@ -3,11 +3,25 @@
          <meta http-equiv="content-type" content="text/html; charset=iso-8859-1">
 	<TITLE>Liste seances</TITLE>
           <link rel="stylesheet" href="include/style.css" type="text/css">
+ <style type="text/css" src=style.css></style>
+<script type="text/javascript" src="../javascripts/jquery-1.11.2.min.js"></script> 	
+<script type="text/javascript" src="../javascripts/jQuery_table_sorter/jquery.tablesorter.js"></script> 
 
    </HEAD>
- <style type="text/css" src=style.css></style>
+ <BODY>
 
-	   	
+<script type="text/javascript" >
+
+
+	  $(document).ready(function() 
+    { 
+        $("#liste").tablesorter({sortList: [[2,1]]}); 
+         $("#Annee").tablesorter();
+       $("#Sport_name").tablesorter();
+ 
+    } 
+); 
+     </script> 	
  
 
 <?php
@@ -16,8 +30,8 @@ require PUN_ROOT.'config2.php';
 require PUN_ROOT.'include/fonctions.php';
 require PUN_ROOT.'include/ExportExcel.php';
 
-$start='1981/06/14';
-$end=date("Y/m/d");
+$start='1981-06-14';
+$end=date("Y-m-d");
 $fseuil=150 ;
 // $datetime1=new DateTime('1981-06-14');
 $Tca=7;
@@ -32,7 +46,7 @@ if (isset($_POST['start']))
 		$start=$_POST['start'];
 	}
 	else{
-		$start='1981/06/14';
+		$start='1981-06-14';
 		// $start=date('Y/m/d', mktime(0,0,0,date('m'),01,date('Y')));
 	}
 }
@@ -44,7 +58,7 @@ if (isset($_POST['end']))
 		$end=$_POST['end'];
 	}
 	else{
-		$end=date("Y/m/d");
+		$end=date("Y-m-d");
 	}
 }
 
@@ -154,7 +168,7 @@ AND seances.sport_id IN ($list_sports )
 GROUP BY sport_name
 ;";
 
-$header[0]="Sport name";
+$header[0]="Sport_name";
 $header[1]="Duree (HH:MM:ss)";
 $header[2]="Calories (cal)";
 $header[3]="Distance (km)";
@@ -192,7 +206,7 @@ $header2[7]="Duree/jour";//Calorie/heure";
 mysql_to_html_table($link, $querysum2, $header2) ;
 
 
-$querysum3="select date_format(date, '%M %Y'), 
+$querysum3="select date_format(date, '%Y'),  date_format(date, '%M'), 
 SEC_TO_TIME(sum(TIME_TO_SEC(duration))) as \"temps passe\" ,
 sum(calories) as \"Calories depensees\" , 
 sum(distance) /1000 as \"distance(km)\" ,
@@ -209,31 +223,33 @@ SEC_TO_TIME(sum(TIME_TO_SEC(duration))/count(distinct(date)))as \"duration/day\"
 		AND seances.date <= date_format('$end','%Y/%m/%d')
 AND seances.date >= date_format('$start','%Y/%m/%d')
 		 AND seances.sport_id IN ($list_sports )
-GROUP BY  date_format(date, '%M %Y')
+GROUP BY  date_format(date, '%Y'),  date_format(date, '%M')
 ORDER BY date ;";
-$header3[0]="Mois"; 
-$header3[1]="Duree"; 
-$header3[2]="Calorie";
-$header3[3]="Distance";
-$header3[4]="Calorie/h";
-$header3[5]= "Nb jours act";
-$header3[6]="Calorie/ jour act"; 
-$header3[7]="Distance par jour act (km/j)";
-$header3[8]="Duree/jour act ";
-$header3[9]="Calorie/ jour";
-$header3[10]="Distance par jour (km/j)";
-$header3[11]="Duree/jour";
+
+$header3[0]="Annee";
+$header3[1]="Mois"; 
+$header3[2]="Duree"; 
+$header3[3]="Calorie";
+$header3[4]="Distance";
+$header3[5]="Calorie/h";
+$header3[6]= "Nb jours act";
+$header3[7]="Calorie/ jour act"; 
+$header3[8]="Distance par jour act (km/j)";
+$header3[9]="Duree/jour act ";
+$header3[10]="Calorie/ jour";
+$header3[11]="Distance par jour (km/j)";
+$header3[12]="Duree/jour";
 mysql_to_html_table($link, $querysum3, $header3) ;
 
 
 
 
 
-print "<TABLE border=2><TR>
-<TD>name</TD><TD>sport</TD><TD>date</TD><TD>cal</TD><TD>dist</TD><TD>duration</TD><TD> 
-		IF</TD><TD>TSS</TD><TD>Fmoy</TD><TD>Fmax</TD><TD>Vaverage</TD><TD>Vmaximum </TD><TD>ATL</TD><TD>CTL</TD><TD>TSB</TD>
-		<TD>&nbsp</TD>
-		</TR>";
+print "<TABLE border=2 id=\"liste\"class=\"tablesorter\"><thead><TR>
+<th>name</th><th>sport</th><th>date</th><th>cal</th><th>dist</th><th>duration</th><th> 
+		IF</th><th>TSS</th><th>Fmoy</th><th>Fmax</th><th>Vaverage</th><th>Vmaximum </th><th>ATL</th><th>CTL</th><th>TSB</th>
+		<th>ACTION</th>
+		</TR></thead><tbody>";
 
 $result = mysql_query($query) or die("La requete  $query a echouee");
 $num_rows = mysql_num_rows($result);
@@ -281,20 +297,20 @@ $tss= number_format($row[8], 2);
 $if=number_format($row[7], 2);
 $temp2=$current_date->format('Y-m-d') ;
 
-print"<form action=\"Voir.php\" method=\"post\">";
-printf("<input type=\"hidden\" name=\"seance_id\" value=\"%s\">",$row[0]);
+//print"<form action=\"Voir.php\" method=\"post\">";
+//printf("<input type=\"hidden\" name=\"seance_id\" value=\"%s\">",$row[0]);
 $toto=str_replace(' ','_',$row[2]);
 echo"<TR id=\"$toto\">
 <TD>$row[1]</TD><TD>$row[2]</TD><TD>$row[3]</TD><TD>$row[4]</TD><TD>$row[5]</TD><TD>$row[6]</TD><TD>
 $row[7]</TD><TD>$row[8]</TD><TD>$row[9]</TD><TD>$row[10]</TD><TD>$row[11]</TD><TD>$row[12]</TD>
 <TD>$atl2</TD><TD>$ctl2</TD><TD>$tsb</TD>
-<TD><INPUT TYPE=\"SUBMIT\" VALUE=\"Voir\"/></TD>
+<TD><form action=\"Voir.php\" method=\"post\"><input type=\"hidden\" name=\"seance_id\" value=\"$row[0]\"><INPUT TYPE=\"SUBMIT\" VALUE=\"Voir  \"/></form></TD>
 
 </TR>" ;
-print"</form>";
+//print"</form>";
  $k=$k+1;
 }
-print "</TABLE>";
+print "</tbody></TABLE>";
 
 mysql_free_result($result);
 mysql_free_result($result_sports);
@@ -303,3 +319,4 @@ mysql_close($link);
 
 	   </BODY>
  </HTML>
+	
