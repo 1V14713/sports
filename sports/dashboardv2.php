@@ -7,7 +7,7 @@ require PUN_ROOT.'/rf/razorflow.php';
 
 
 $now = new DateTime();
-$last3months = $now->sub(new DateInterval('P2M'));
+$last3months = $now->sub(new DateInterval('P4M'));
 $start='1981/06/14';
 $end=date("Y/m/d");
 $fseuil=150 ;
@@ -64,7 +64,7 @@ $ctl= $ctl_b - $ctl_b*(1-exp (-1/$Tcc));
 	$temp2=$temp->format('Y-m-d') ;
 	if($temp > $last3months )
 	{
-		$data[]=array($temp->format('Y-m-d'),floatval($atl), floatval($ctl),floatval($tsb));
+		$data[]=array($temp->format('Y-m-d'),floatval($atl), floatval($ctl),floatval($tsb), 0, 0);
 	}
 	}
 
@@ -88,13 +88,34 @@ $temp2=$current_date->format('Y-m-d') ;
 
 if($current_date > $last3months )
 {
-		$data[]=array($current_date->format('Y-m-d'),floatval($atl), floatval($ctl),floatval($tsb));
+		$data[]=array($current_date->format('Y-m-d'),floatval($atl), floatval($ctl),floatval($tsb),floatval($if),floatval($tss));
 }
 
 
 
  $k=$k+1;
 }
+
+$now =  new DateTime();
+	$interval = $datetime1->diff($now);
+	$m=$interval->format('%a');
+	for ( $i = 1 ; $i<$m+1 ; $i++ )
+	{
+$atl= $atl_b - $atl_b *(1-exp(-1/$Tca));
+$ctl= $ctl_b - $ctl_b*(1-exp (-1/$Tcc));
+	$tsb = number_format($ctl - $atl, 2) ;
+	$atl_b=$atl ;
+	$ctl_b=$ctl;
+	$atl2=number_format($atl, 2);
+	$ctl2=number_format($ctl, 2);
+	$tsb = number_format($ctl - $atl, 2) ;
+
+	$datetime1= $datetime1->add(new DateInterval('P1D'));
+	$temp2=$datetime1->format('Y-m-d') ;
+	$data[]=array($temp2,floatval($atl), floatval($ctl),floatval($tsb), 0, 0);
+	
+	}
+
 
 mysql_free_result($result);
 mysql_close($link);
@@ -104,7 +125,9 @@ $ds->setData(array(
 'mydate' => 'text' ,
 'atl' => 'number' ,
 'ctl' => 'number' ,
-'tsb' => 'number'
+'tsb' => 'number',
+'if' => 'number' ,
+'tss' => 'number'
 ),
  $data);
 $ds->initialize();
@@ -113,7 +136,7 @@ $ds->initialize();
 $chart = new ChartComponent();
 $chart->setCaption("Performance Management");
 $chart->setWidth(4);
-$chart->setHeight(3);
+$chart->setHeight(4);
 $chart->setDataSource($ds);
 
 $chart->setLabelExpression("DATE ", 'mydate');
@@ -125,10 +148,17 @@ $chart->setLabelExpression("DATE ", 'mydate');
 ));
 */
 $chart->setYAxis("ATL/CTL/TSB", array(
-		'adaptiveYMin' => true
+		'adaptiveYMin' => true,
+	'minValue' => -50,
+	'maxValue' => 200
 ));
 
-
+/*
+$chart->setSecondYAxis("TSB", array(
+	'minValue' => -50,
+	'maxValue' => 50
+));
+*/
 $chart->addSeries('ATL Fatigue',    'atl' ,array(
 		'decimals' => 2 ,
 		'aggregateFunction' => "AVG" )
@@ -140,12 +170,6 @@ $chart->addSeries('CTL Fitness',   'ctl',array(
 ); 
 
 
-//$chart->setSecondYAxis("TSB Form");
-
-//, array(
-//		'adaptiveYMin' => true
-//));
-
 $chart->addSeries('TSB', 'tsb', array(
 		'displayType' => "Line",
 		'decimals' => 2 ,
@@ -155,6 +179,21 @@ $chart->addSeries('TSB', 'tsb', array(
 $chart->addTrendLine("DANGER", -30);
 $chart->addTrendLine("HARD_TRAINING", -20);
 
+/*
+
+$chart->addSeries('TSS', 'tss', array(
+		'displayType' => "Line",
+		'decimals' => 2 ,
+		'aggregateFunction' => "SUM"
+));
+;
+$chart->addSeries('IF', 'if', array(
+		'displayType' => "Line",
+		'decimals' => 2 ,
+		'aggregateFunction' => "SUM",
+'onSecondYAxis' => true
+));
+*/
 
 
 Dashboard::addComponent($chart);
