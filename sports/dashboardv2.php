@@ -5,35 +5,51 @@ require PUN_ROOT.'sports/include/fonctions.php';
 require PUN_ROOT.'/rf/razorflow.php';
 
 
-
 $now = new DateTime();
-$last3months = $now->sub(new DateInterval('P3M'));
-$start='1981/06/14';
-$end=date("Y/m/d");
+$end= new DateTime();
+//$last3months = $end->sub(new DateInterval('P3M'));
+//$start=$end->sub(new DateInterval('P2M'));
+//$end= $now->add(new DateInterval('P7D'));
+
+/*
 $fseuil=150 ;
-$datetime1=new DateTime('2012-04-13');
 $Tca=7;
 $Tcc=42;
 $atl_b=0;
 $ctl_b=0;
+*/
 
-
-$datetime1=new DateTime($start);
 
 
 $link=connect_db($db_host, $db_username, $db_password, $db_name);
+$query_settings = "SELECT * FROM `perf_setting` WHERE user='mathieugravil';";
+$result_settings = mysql_query($query_settings) or die("La requete $query_settings a echouee");
+$settings=mysql_fetch_row ($result_settings );
 
+$fseuil=$settings[1] ;
+$Tca=$settings[2];
+$Tcc=$settings[3];
+$atl_b=$settings[4];
+$ctl_b=$settings[5];
+$start=$end->sub(new DateInterval($settings[6]));
+$end= $now->add(new DateInterval($settings[7]));
 
+$end_str=$end->format('Y-m-d');
+$start_str=$start->format('Y-m-d');
+$datetime1=$start ;
 
 $query="select seance_id, name, sport_name, date, calories, distance, duration, 
 		average/$fseuil  , (100*TIME_TO_SEC(duration)*average*average)/(3600*$fseuil*$fseuil), average, maximum, 
 		 Vaverage, Vmaximum , altitude
 from seances, sport_type 
 Where seances.sport_id = sport_type.sport_id
+AND seances.date <= '$end_str'
+AND seances.date >= '$start_str'
 order by date asc;";
 
 $result = mysql_query($query) or die("La requete  $query a echouee");
 $num_rows = mysql_num_rows($result);
+
 $k=1;	
 
 while ($row = mysql_fetch_array($result, MYSQL_NUM))
@@ -62,7 +78,7 @@ $ctl= $ctl_b - $ctl_b*(1-exp (-1/$Tcc));
 
 	$temp= $temp->add(new DateInterval('P1D'));
 	$temp2=$temp->format('Y-m-d') ;
-	if($temp > $last3months )
+	if($temp > $start )
 	{
 		$data[]=array($temp->format('Y-m-d'),floatval($atl), floatval($ctl),floatval($tsb), 0, 0);
 	}
@@ -86,7 +102,7 @@ $if=number_format($row[7], 2);
 $temp2=$current_date->format('Y-m-d') ;
 //print_r($current_date);
 
-if($current_date > $last3months )
+if($current_date > $start )
 {
 		$data[]=array($current_date->format('Y-m-d'),floatval($atl), floatval($ctl),floatval($tsb),floatval($if),floatval($tss));
 }
@@ -96,8 +112,8 @@ if($current_date > $last3months )
  $k=$k+1;
 }
 
-$now =  new DateTime();
-	$interval = $datetime1->diff($now);
+//$now =  new DateTime();
+	$interval = $datetime1->diff($end);
 	$m=$interval->format('%a');
 	for ( $i = 1 ; $i<$m+1 ; $i++ )
 	{
@@ -116,7 +132,7 @@ $ctl= $ctl_b - $ctl_b*(1-exp (-1/$Tcc));
 	
 	}
 
-
+mysql_free_result($result_settings);
 mysql_free_result($result);
 mysql_close($link);
 
