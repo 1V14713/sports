@@ -43,8 +43,7 @@ $query="select seance_id, name, sport_name, date, calories, distance, duration,
 		 Vaverage, Vmaximum , altitude
 from seances, sport_type 
 Where seances.sport_id = sport_type.sport_id
-AND seances.date <= '$end_str'
-AND seances.date >= '$start_str'
+
 order by date asc;";
 
 $result = mysql_query($query) or die("La requete  $query a echouee");
