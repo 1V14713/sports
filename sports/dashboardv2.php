@@ -148,9 +148,9 @@ $chart->setLabelExpression("DATE ", 'mydate');
 ));
 */
 $chart->setYAxis("ATL/CTL/TSB", array(
-		'adaptiveYMin' => true,
-	'minValue' => -50,
-	'maxValue' => 200
+		'adaptiveYMin' => true
+//	'minValue' => -50,
+//	'maxValue' => 200
 ));
 
 /*
