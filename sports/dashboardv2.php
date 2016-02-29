@@ -7,7 +7,7 @@ require PUN_ROOT.'/rf/razorflow.php';
 
 
 $now = new DateTime();
-$last3months = $now->sub(new DateInterval('P4M'));
+$last3months = $now->sub(new DateInterval('P3M'));
 $start='1981/06/14';
 $end=date("Y/m/d");
 $fseuil=150 ;
