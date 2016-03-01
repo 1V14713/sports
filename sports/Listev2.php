@@ -257,7 +257,7 @@ mysql_to_html_table($link, $querysum3, $header3) ;
 
 
 print "<TABLE border=2 id=\"liste\"class=\"tablesorter\"><thead><TR>
-<th>name</th><th>sport</th><th>date</th><th>cal</th><th>dist</th><th>duration</th><th> 
+<th>name</th><th>sport</th><th>date</th><th>cal</th><th>dist</th><th>deniv</th><th>duration</th><th> 
 		IF</th><th>TSS</th><th>Fmoy</th><th>Fmax</th><th>Vaverage</th><th>Vmaximum </th><th>ATL</th><th>CTL</th><th>TSB</th>
 		<th>ACTION</th>
 		</TR></thead><tbody>";
@@ -312,7 +312,7 @@ $temp2=$current_date->format('Y-m-d') ;
 //printf("<input type=\"hidden\" name=\"seance_id\" value=\"%s\">",$row[0]);
 $toto=str_replace(' ','_',$row[2]);
 echo"<TR id=\"$toto\">
-<TD>$row[1]</TD><TD>$row[2]</TD><TD>$row[3]</TD><TD>$row[4]</TD><TD>$row[5]</TD><TD>$row[6]</TD><TD>
+<TD>$row[1]</TD><TD>$row[2]</TD><TD>$row[3]</TD><TD>$row[4]</TD><TD>$row[5]</TD><TD>$row[13]</TD><TD>$row[6]</TD><TD>
 $row[7]</TD><TD>$row[8]</TD><TD>$row[9]</TD><TD>$row[10]</TD><TD>$row[11]</TD><TD>$row[12]</TD>
 <TD>$atl2</TD><TD>$ctl2</TD><TD>$tsb</TD>
 <TD><form action=\"Voir.php\" method=\"post\"><input type=\"hidden\" name=\"seance_id\" value=\"$row[0]\"><INPUT TYPE=\"SUBMIT\" VALUE=\"Voir  \"/></form></TD>
