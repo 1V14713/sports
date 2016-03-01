@@ -64,6 +64,17 @@ if (isset($_POST['end']))
 
 
 $link=connect_db($db_host, $db_username, $db_password, $db_name);
+$query_settings = "SELECT * FROM `perf_setting` WHERE user='mathieugravil';";
+$result_settings = mysql_query($query_settings) or die("La requete $query_settings a echouee");
+$settings=mysql_fetch_row ($result_settings );
+
+$fseuil=$settings[1] ;
+$Tca=$settings[2];
+$Tcc=$settings[3];
+$atl_b=$settings[4];
+$ctl_b=$settings[5];
+
+
 $query_sports = "select sport_id , sport_name from sport_type order by sport_id desc; ";
 $sports = array();	
 $result_sports = mysql_query($query_sports) or die("La requete $query_sports a echouee");
