@@ -4,8 +4,12 @@ require PUN_ROOT.'/sports/config2.php';
 require PUN_ROOT.'/rf/razorflow.php';
 require PUN_ROOT.'/sports/include/fonctions.php';
 
-$link=connect_db($db_host, $db_username, $db_password, $db_name);
-$query_sports = "select sport_id , sport_name from sport_type order by sport_id desc; ";
+
+$mysqli = new mysqli($db_host, $db_username, $db_password, $db_name);
+if ($mysqli->connect_errno) {
+    echo "Echec lors de la connexion à MySQL  : (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
+}
+$query_sports = "select sport_id , sport_name from sport_type order by sport_id desc";
 $sports = array();	
 
 
@@ -19,12 +23,18 @@ WHERE seances.sport_id = sport_type.sport_id
 AND sport_type.sport_id = seances.sport_id order by sport_name) AS sub_query');
 
 
-
+$now = new DateTime();
+$last3months = $now->sub(new DateInterval('P4M'));
 $filter = new AutoFilterComponent();
-$filter->setCaption("Sport");
+
 $filter->setDataSource($dataSource);
 $filter->addMultiSelectFilter("Sport", "sport_name");
-$filter->addTimeRangeFilter("Date", "date");
+$filter->addTimeRangeFilter("Date", "date"); // > {{start}} AND date < {{end}}",	array("12/01/2015", "02/19/2016"));
+
+
+//$filter->addTimeRangeCondition("Date", "date > {{start}} AND date < {{end}}",
+//		array("12/01/2015", "02/19/2016"));
+
 Dashboard::addcomponent($filter);
 $sports_cal= new ChartComponent();
 $sports_cal->setCaption ("Sports par calories dépensées");
@@ -57,9 +67,9 @@ $TZ->setYAxis("TIME", array(
 #));
 $TZ->setLabelExpression("Date", "date", array(
 		'timestampRange' => true,
-               		'timeUnit' => 'month',
-                'customTimeUnitPath' => array('month', 'day'),
-                'autoDrill' => true
+            		'timeUnit' => 'month',
+               'customTimeUnitPath' =>array('month', 'day'),
+               'autoDrill' => true
 
 ));
 $TZ->addSeries("BELOW", "below  / 3600 ", array(   
@@ -186,24 +196,18 @@ $genreChart->setLabelExpression("Date", "date", array(
                 'customTimeUnitPath' => array('month', 'day'),
                 'autoDrill' => true
 ));
-/*
-$genreChart->addSeries("escalade", 'Calories', array('condition' => "sport_name = 'escalade'", 'displayType' => 'Line' ,'showValues'=> false));
-$genreChart->addSeries("natation", 'Calories', array('condition' => "sport_name = 'natation'", 'displayType' => 'Line','showValues'=> false));
-$genreChart->addSeries("Footing", 'Calories', array('condition' => "sport_name = 'Footing'", 'displayType' => 'Line','showValues'=> false));
-$genreChart->addSeries("velo", 'Calories', array('condition' => "sport_name = 'velo'", 'displayType' => 'Line','showValues'=> false));
-$genreChart->addSeries("Rando", 'Calories', array('condition' => "sport_name = 'Rando'", 'displayType' => 'Line','showValues'=> false));
 
-$genreChart->addSeries("escalade cal_H", 'cal_H', array('condition' => "sport_name = 'escalade'", 'displayType' => 'Line','aggregateFunction' => "AVG",'showValues'=> false));
-$genreChart->addSeries("natation cal_H", 'cal_H', array('condition' => "sport_name = 'natation'", 'displayType' => 'Line' ,'aggregateFunction' => "AVG",'showValues'=> false));
-$genreChart->addSeries("Footing cal_H", 'cal_H', array('condition' => "sport_name = 'Footing'", 'displayType' => 'Line' ,'aggregateFunction' => "AVG",'showValues'=> false));
-$genreChart->addSeries("velo cal_H", 'cal_H', array('condition' => "sport_name = 'velo'", 'displayType' => 'Line' ,'aggregateFunction' => "AVG",'showValues'=> false));
-$genreChart->addSeries("Rando cal_H", 'cal_H', array('condition' => "sport_name = 'Rando'", 'displayType' => 'Line' ,'aggregateFunction' => "AVG",'showValues'=> false));
-*/
-$result_sports = mysql_query($query_sports) or die("La requete $query_sports a echouee");
-while ($row_sport=mysql_fetch_array($result_sports, MYSQL_NUM) )
+  
+$result_sports=$mysqli->query($query_sports);
+
+
+$result_sports->data_seek(0);
+
+while ($row_sport = $result_sports->fetch_assoc() )
 	{
-$genreChart->addSeries("$row_sport[1]", 'Calories', array('condition' => "sport_name = '$row_sport[1]'", 'displayType' => 'Line' ,'showValues'=> false));	
-$genreChart->addSeries("$row_sport[1] cal_H", 'cal_H', array('condition' => "sport_name = '$row_sport[1]'", 'displayType' => 'Line','aggregateFunction' => "AVG",'showValues'=> false));	
+$sportname=$row_sport['sport_name'];
+$genreChart->addSeries($row_sport['sport_name'], 'Calories', array('condition' => "sport_name = '$sportname'", 'displayType' => 'Line' ,'showValues'=> false));	
+$genreChart->addSeries($row_sport['sport_name']."cal_H", 'cal_H', array('condition' => "sport_name = '$sportname'", 'displayType' => 'Line','aggregateFunction' => "AVG",'showValues'=> false));	
 	}
 
 
@@ -229,10 +233,11 @@ $genreTimeChart->setLabelExpression("Date", "date", array(
                 'autoDrill' => true
 ));
 
-$result_sports = mysql_query($query_sports) or die("La requete $query_sports a echouee");
-while ($row_sport=mysql_fetch_array($result_sports, MYSQL_NUM) )
+$result_sports->data_seek(0);
+while ($row_sport = $result_sports->fetch_assoc() )
 	{
-$genreTimeChart->addSeries("$row_sport[1]", 'duration', array('condition' => "sport_name = '$row_sport[1]'", 'displayType' => 'Line' ,'showValues'=> false));	
+$sportname=$row_sport['sport_name'];
+$genreTimeChart->addSeries($row_sport['sport_name'], 'duration', array('condition' => "sport_name = '$sportname'", 'displayType' => 'Line' ,'showValues'=> false));	
 	}
 
 
@@ -256,11 +261,17 @@ $genredistChart->setLabelExpression("Date", "date", array(
                 'customTimeUnitPath' => array('month', 'day'),
                 'autoDrill' => true
 ));
+$mysqli = new mysqli($db_host, $db_username, $db_password, $db_name);
+if ($mysqli->connect_errno) {
+    echo "Echec lors de la connexion à MySQL  : (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
+}
 
-$result_sports = mysql_query($query_sports) or die("La requete $query_sports a echouee");
-while ($row_sport=mysql_fetch_array($result_sports, MYSQL_NUM) )
+
+$result_sports->data_seek(0);
+while ($row_sport = $result_sports->fetch_assoc() )
 	{
-$genredistChart->addSeries("$row_sport[1]", 'DIST_KM', array('condition' => "sport_name = '$row_sport[1]'", 'displayType' => 'Line' ,'showValues'=> false));	
+$sportname=$row_sport['sport_name'];
+$genredistChart->addSeries($row_sport['sport_name'], 'DIST_KM', array('condition' => "sport_name = '$sportname'", 'displayType' => 'Line' ,'showValues'=> false));	
 	}
 
 
@@ -284,11 +295,18 @@ $genrealtChart->setLabelExpression("Date", "date", array(
                 'customTimeUnitPath' => array('month', 'day'),
                 'autoDrill' => true
 ));
+$mysqli = new mysqli($db_host, $db_username, $db_password, $db_name);
+if ($mysqli->connect_errno) {
+    echo "Echec lors de la connexion à MySQL  : (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
+}
 
-$result_sports = mysql_query($query_sports) or die("La requete $query_sports a echouee");
-while ($row_sport=mysql_fetch_array($result_sports, MYSQL_NUM) )
+
+
+$result_sports->data_seek(0);
+while ($row_sport = $result_sports->fetch_assoc() )
 	{
-$genrealtChart->addSeries("$row_sport[1]", 'altitude', array('condition' => "sport_name = '$row_sport[1]'", 'displayType' => 'Line' ,'showValues'=> false));	
+$sportname=$row_sport['sport_name'];
+$genrealtChart->addSeries($row_sport['sport_name'], 'altitude', array('condition' => "sport_name = '$sportname'", 'displayType' => 'Line' ,'showValues'=> false));	
 	}
 
 
