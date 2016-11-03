@@ -336,8 +336,7 @@ mysql_free_result($result);
 mysql_free_result($result_sports);
 mysql_close($link);
 ?>
-<script src="http://listjs.com/no-cdn/list.js"></script>
-
+<script type="text/javascript" src="../javascripts/list.min.js"></script> 
 <script type="text/javascript" >
 var options = {
   valueNames: [ 'name', 'date', 'sport',  ]
