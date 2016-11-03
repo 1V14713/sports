@@ -309,6 +309,8 @@ $sportname=$row_sport['sport_name'];
 $genrealtChart->addSeries($row_sport['sport_name'], 'altitude', array('condition' => "sport_name = '$sportname'", 'displayType' => 'Line' ,'showValues'=> false));	
 	}
 
+$result_sports->free();
+$mysqli->close();
 
 $genrealtChart->setOption('showValues', false);
 Dashboard::addComponent($genrealtChart);
