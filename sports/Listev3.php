@@ -326,8 +326,8 @@ $if =  number_format($fmoy_day/$fseuil,2)  ;
 $tss =  number_format((100*$total_duration_sec*$fmoy_day*$fmoy_day/$fseuil)/(3600*$fseuil),2);
 
 
-$atl= $atl_b+($row[8]-$atl_b)/$Tca;
-$ctl= $ctl_b +($row[8]-$ctl_b)/$Tcc;
+$atl= $atl_b+($tss-$atl_b)/$Tca;
+$ctl= $ctl_b +($tss-$ctl_b)/$Tcc;
 $tsb = number_format($ctl - $atl, 2) ;
 $atl_b=$atl ;
 $ctl_b=$ctl;
