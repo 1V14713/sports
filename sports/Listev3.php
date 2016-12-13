@@ -282,6 +282,9 @@ while ($row = mysql_fetch_array($result, MYSQL_NUM))
 	if ($k == 1 )
 	{	
 	$datetime1=new DateTime($row[3]);
+	$previousdate = new DateTime($row[3]);
+	$total_duration_sec = 1;
+	$barXtotal_dur_sec = 0;
 	}
 $current_date=new DateTime($row[3]);
 $interval = $datetime1->diff($current_date);
