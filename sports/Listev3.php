@@ -344,7 +344,7 @@ $temp2=$current_date->format('Y-m-d') ;
 $toto=str_replace(' ','_',$row[2]);
 echo"<TR id=\"$toto\">
 <TD class=\"name\">$row[1]</TD><TD class=\"sport\">$row[2]</TD><TD class=\"date\">$row[3]</TD><TD class=\"cal\">$row[4]</TD><TD class=\"dist\">$row[5]</TD><TD class=\"deniv\">$row[13]</TD><TD class=\"duration\">$row[6]</TD><TD class=\"IF\">
-$row[7]</TD><TD class=\"TSS\">$row[8]</TD><TD class=\"Fmoy\">$row[9]</TD><TD class=\"Fmax\">$row[10]</TD><TD class=\"Vaverage\">$row[11]</TD><TD class=\"Vmaximum\">$row[12]</TD>
+$if</TD><TD class=\"TSS\">$tss</TD><TD class=\"Fmoy\">$row[9]</TD><TD class=\"Fmax\">$row[10]</TD><TD class=\"Vaverage\">$row[11]</TD><TD class=\"Vmaximum\">$row[12]</TD>
 <TD class=\"ATL\">$atl2</TD><TD class=\"CTL\">$ctl2</TD><TD class=\"TSB\">$tsb</TD>
 <TD><form action=\"Voir.php\" method=\"post\"><input type=\"hidden\" name=\"seance_id\" value=\"$row[0]\"><INPUT TYPE=\"SUBMIT\" VALUE=\"Voir  \"/></form></TD>
 
