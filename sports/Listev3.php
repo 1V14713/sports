@@ -305,7 +305,25 @@ $interval = $datetime1->diff($current_date);
 	$temp2=$temp->format('Y-m-d') ;
 
 	}
+$interval2 = $previousdate->diff($current_date);
+$m2=$interval2->format('%a');
+if ($m2 == 0)
+{
+# On est sur le même jour..
+$total_duration_sec = $total_duration_sec + $row[14];
+$barXtotal_dur_sec = $barXtotal_dur_sec +  $row[9]*$row[14];
+}
+else
+{
+# si on est sur un autre jour
+$total_duration_sec = $row[14];
+$barXtotal_dur_sec = $row[9]*$row[14];
+$previousdate = $current_date ;
+}
+$fmoy_day=$barXtotal_dur_sec/$total_duration_sec;
 
+$if =  number_format($fmoy_day/$fseuil,2)  ;
+$tss =  number_format((100*$total_duration_sec*$fmoy_day*$fmoy_day/$fseuil)/(3600*$fseuil),2);
 
 
 $atl= $atl_b+($row[8]-$atl_b)/$Tca;
@@ -317,8 +335,8 @@ $atl2=number_format($atl, 2);
 $ctl2=number_format($ctl, 2);
 $datetime1=$current_date;
 
-$tss= number_format($row[8], 2);
-$if=number_format($row[7], 2);
+//$tss= number_format($row[8], 2);
+//$if=number_format($row[7], 2);
 $temp2=$current_date->format('Y-m-d') ;
 
 //print"<form action=\"Voir.php\" method=\"post\">";
