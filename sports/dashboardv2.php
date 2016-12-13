@@ -21,18 +21,24 @@ $ctl_b=0;
 
 
 
-$link=connect_db($db_host, $db_username, $db_password, $db_name);
-$query_settings = "SELECT * FROM `perf_setting` WHERE user='mathieugravil';";
-$result_settings = mysql_query($query_settings) or die("La requete $query_settings a echouee");
-$settings=mysql_fetch_row ($result_settings );
+//$link=connect_db($db_host, $db_username, $db_password, $db_name);
 
-$fseuil=$settings[1] ;
-$Tca=$settings[2];
-$Tcc=$settings[3];
-$atl_b=$settings[4];
-$ctl_b=$settings[5];
-$start=$end->sub(new DateInterval($settings[6]));
-$end= $now->add(new DateInterval($settings[7]));
+$mysqli = new mysqli($db_host, $db_username, $db_password, $db_name);
+if ($mysqli->connect_errno) {
+    echo "Echec lors de la connexion à MySQL  : (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
+}
+$query_settings = "SELECT user, fseuil, Tca,Tcc,atl, ctl, start,end  FROM `perf_setting` WHERE user='mathieugravil'";
+$result_settings=$mysqli->query($query_settings);
+$result_settings->data_seek(0);
+$settings=$result_settings->fetch_assoc() ;
+
+$fseuil=$settings['fseuil'] ;
+$Tca=$settings['Tca'];
+$Tcc=$settings['Tcc'];
+$atl_b=$settings['atl'];
+$ctl_b=$settings['ctl'];
+$start=$end->sub(new DateInterval($settings['start']));
+$end= $now->add(new DateInterval($settings['end']));
 
 $end_str=$end->format('Y-m-d');
 $start_str=$start->format('Y-m-d');
@@ -40,22 +46,27 @@ $datetime1=$start ;
 
 $query="select seance_id, name, sport_name, date, calories, distance, duration, 
 		average/$fseuil  , (100*TIME_TO_SEC(duration)*average*average)/(3600*$fseuil*$fseuil), average, maximum, 
-		 Vaverage, Vmaximum , altitude
+		 Vaverage, Vmaximum , altitude,TIME_TO_SEC(duration)
 from seances, sport_type 
 Where seances.sport_id = sport_type.sport_id
+order by date asc";
 
-order by date asc;";
-
-$result = mysql_query($query) or die("La requete  $query a echouee");
-$num_rows = mysql_num_rows($result);
+//$result = mysql_query($query) or die("La requete  $query a echouee");
+$result=$mysqli->query($query);
+$num_rows = $result->num_rows;
 
 $k=1;	
+//$result->data_seek(0);
 
-while ($row = mysql_fetch_array($result, MYSQL_NUM))
+while ($row = $result->fetch_array(MYSQLI_NUM) )	
+//while ($row = mysql_fetch_array($result, MYSQL_NUM))
 {
 	if ($k == 1 )
 	{	
 	$datetime1=new DateTime($row[3]);
+	$previousdate = new DateTime($row[3]);
+	$total_duration_sec = 1;
+	$barXtotal_dur_sec = 0;
 	}
 
 	$current_date=new DateTime($row[3]);
@@ -77,16 +88,40 @@ $ctl= $ctl_b - $ctl_b*(1-exp (-1/$Tcc));
 
 	$temp= $temp->add(new DateInterval('P1D'));
 	$temp2=$temp->format('Y-m-d') ;
+	$total_duration_sec = 1 ;
+	$barXtotal_dur_sec = 0 ;
 	if($temp > $start )
 	{
 		$data[]=array($temp->format('Y-m-d'),floatval($atl), floatval($ctl),floatval($tsb), 0, 0);
 	}
 	}
+$interval2 = $previousdate->diff($current_date);
+$m2=$interval2->format('%a');
+if ($m2 == 0)
+{
+# On est sur le même jour..
+$total_duration_sec = $total_duration_sec + $row[14];
+$barXtotal_dur_sec = $barXtotal_dur_sec +  $row[9]*$row[14];
+}
+else
+{
+# si on est sur un autre jour
+$total_duration_sec = $row[14];
+$barXtotal_dur_sec = $row[9]*$row[14];
+$previousdate = $current_date ;
+}
+$fmoy_day=$barXtotal_dur_sec/$total_duration_sec;
 
+$if =  number_format($fmoy_day/$fseuil,2)  ;
+$tss =  number_format((100*$total_duration_sec*$fmoy_day*$fmoy_day/$fseuil)/(3600*$fseuil),2);
+
+$atl= $atl_b+($tss-$atl_b)/$Tca;
+$ctl= $ctl_b +($tss-$ctl_b)/$Tcc;
+$tsb = number_format($ctl - $atl, 2) ;
 //	$atl= $atl_b+($row[8]-$atl_b)/$Tca;
 //$ctl= $ctl_b +($row[8]-$ctl_b)/$Tcc;
-$atl= $atl_b +($row[8]- $atl_b)*(1- exp(-1/$Tca));
-$ctl= $ctl_b +($row[8] - $ctl_b)*(1-exp (-1/$Tcc));
+//mgr $atl= $atl_b +($row[8]- $atl_b)*(1- exp(-1/$Tca));
+//MGR $ctl= $ctl_b +($row[8] - $ctl_b)*(1-exp (-1/$Tcc));
 
 
 $tsb = number_format($ctl - $atl, 2) ;
@@ -131,9 +166,10 @@ $ctl= $ctl_b - $ctl_b*(1-exp (-1/$Tcc));
 	
 	}
 
-mysql_free_result($result_settings);
-mysql_free_result($result);
-mysql_close($link);
+mysqli_free_result($result_settings);
+mysqli_free_result($result);
+$mysqli->close();
+//mysql_close($link);
 
 $ds = new ArrayDataSource ();
 $ds->setData(array(

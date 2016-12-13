@@ -63,10 +63,10 @@ if (isset($_POST['end']))
 }
 
 
-$link=connect_db($db_host, $db_username, $db_password, $db_name);
-$query_settings = "SELECT * FROM `perf_setting` WHERE user='mathieugravil';";
-$result_settings = mysql_query($query_settings) or die("La requete $query_settings a echouee");
-$settings=mysql_fetch_row ($result_settings );
+$link=connectsqli_db($db_host, $db_username, $db_password, $db_name);
+$query_settings = "SELECT * FROM `perf_setting` WHERE user='mathieugravil'";
+$result_settings = mysqli_query($link, $query_settings) or die("La requete $query_settings a echouee");
+$settings=mysqli_fetch_array($result_settings, MYSQLI_NUM );
 
 $fseuil=$settings[1] ;
 $Tca=$settings[2];
@@ -75,15 +75,15 @@ $atl_b=$settings[4];
 $ctl_b=$settings[5];
 
 
-$query_sports = "select sport_id , sport_name from sport_type order by sport_id desc; ";
+$query_sports = "select sport_id , sport_name from sport_type order by sport_id desc ";
 $sports = array();	
-$result_sports = mysql_query($query_sports) or die("La requete $query_sports a echouee");
+$result_sports = mysqli_query($link , $query_sports) or die("La requete $query_sports a echouee");
 if(isset($_POST['sport']) && !empty($_POST['sport'])){
 	$sports=$_POST['sport'];
 	$all_selected=0;
 }
 else  {
-	while ($row_sport=mysql_fetch_array($result_sports, MYSQL_NUM) )
+	while ($row_sport=mysqli_fetch_array($result_sports, MYSQLI_NUM) )
 	{
 		$sports[] = $row_sport[0];
 	}
@@ -96,13 +96,13 @@ $list_sports = "'". implode("', '", $sports) ."'";
 
 $query="select seance_id, name, sport_name, date, calories, distance, duration, 
 		format(average/$fseuil,2)  , format((100*TIME_TO_SEC(duration)*average*average/$fseuil)/(3600*$fseuil),2), average, maximum, 
-		 Vaverage, Vmaximum , altitude
+		 Vaverage, Vmaximum , altitude, TIME_TO_SEC(duration)
 from seances, sport_type 
 Where seances.sport_id = sport_type.sport_id
 AND seances.date <= date_format('$end','%Y/%m/%d')
 AND seances.date >= date_format('$start','%Y/%m/%d')
 AND seances.sport_id IN ($list_sports )
-order by date asc;";
+order by date asc";
 
 
 echo "<H1>Liste sur la periode du $start au  $end </H1>" ;
@@ -115,9 +115,9 @@ printf("<table border=2>\n
 </TR>\n",$start ,$end);
 print "<TR><TD>Selectione un ou plusieurs sports : </TD><TD><select name=\"sport[]\" multiple>";
 
-$result_sports = mysql_query($query_sports) or die("La requete $query_sports a echouee");
+$result_sports = mysqli_query($link, $query_sports) or die("La requete $query_sports a echouee");
 
-while ($row_sports = mysql_fetch_array($result_sports, MYSQL_NUM))
+while ($row_sports = mysqli_fetch_array($result_sports, MYSQLI_NUM))
 {
 	if ($all_selected == 0)
 	{
@@ -140,8 +140,8 @@ print "	<TD><INPUT TYPE=\"SUBMIT\" VALUE=\"Report\"/></form></TD><TD><form actio
 <input type=\"hidden\" name=\"start\" value=\"$start\">
 <input type=\"hidden\" name=\"end\" value=\"$end\">";
 
-$result_sports = mysql_query($query_sports) or die("La requete $query_sports a echouee");
-while ($row_sports = mysql_fetch_array($result_sports, MYSQL_NUM))
+$result_sports = mysqli_query($link, $query_sports) or die("La requete $query_sports a echouee");
+while ($row_sports = mysqli_fetch_array($result_sports, MYSQLI_NUM))
 {
 	if ($all_selected == 0)
 	{
@@ -176,8 +176,7 @@ WHERE seances.sport_id=sport_type.sport_id
 AND seances.date <= date_format('$end','%Y/%m/%d')
 AND seances.date >= date_format('$start','%Y/%m/%d')
 AND seances.sport_id IN ($list_sports )
-GROUP BY sport_name
-;";
+GROUP BY sport_name";
 
 $header[0]="Sport_name";
 $header[1]="Duree (HH:MM:ss)";
@@ -189,7 +188,7 @@ $header[6]="Calorie/ jour act";
 $header[7]="Distance par jour act (km/j)";
 $header[8]="Duree/jour act ";
 
-mysql_to_html_table($link, $querysum1, $header) ;
+mysqli_to_html_table($link, $querysum1, $header) ;
 
 
 $querysum2="SELECT count(distinct(date)) as \"nb days\" ,
@@ -204,7 +203,7 @@ from seances
 WHERE seances.date <= date_format('$end','%Y/%m/%d')
 AND seances.date >= date_format('$start','%Y/%m/%d')
 AND seances.sport_id IN ($list_sports )
-;";
+";
 
 $header2[0]="NB jours act periode"; //
 $header2[1]="Calorie/ jour act"; //
@@ -214,7 +213,7 @@ $header2[4]="NB jours  periode";
 $header2[5]="Calorie/ jour"; //
 $header2[6]="Distance par jour (km/j)";//Nb jour periode";
 $header2[7]="Duree/jour";//Calorie/heure"; 
-mysql_to_html_table($link, $querysum2, $header2) ;
+mysqli_to_html_table($link, $querysum2, $header2) ;
 
 
 $querysum3="select date_format(date, '%Y'),  date_format(date, '%M'), 
@@ -235,7 +234,7 @@ SEC_TO_TIME(sum(TIME_TO_SEC(duration))/count(distinct(date)))as \"duration/day\"
 AND seances.date >= date_format('$start','%Y/%m/%d')
 		 AND seances.sport_id IN ($list_sports )
 GROUP BY  date_format(date, '%Y'),  date_format(date, '%M')
-ORDER BY date ;";
+ORDER BY date ";
 
 $header3[0]="Annee";
 $header3[1]="Mois"; 
@@ -250,7 +249,7 @@ $header3[9]="Duree/jour act ";
 $header3[10]="Calorie/ jour";
 $header3[11]="Distance par jour (km/j)";
 $header3[12]="Duree/jour";
-mysql_to_html_table($link, $querysum3, $header3) ;
+mysqli_to_html_table($link, $querysum3, $header3) ;
 
 
 
@@ -271,17 +270,20 @@ print "
 		</TR></thead>
 <tbody class=\"list\">";
 
-$result = mysql_query($query) or die("La requete  $query a echouee");
-$num_rows = mysql_num_rows($result);
+$result = mysqli_query($link, $query) or die("La requete  $query a echouee");
+$num_rows = mysqli_num_rows($result);
 echo "$num_rows Rows\n";
 		
 $k=1;	
 
-while ($row = mysql_fetch_array($result, MYSQL_NUM))
+while ($row = mysqli_fetch_array($result, MYSQLI_NUM))
 {
 	if ($k == 1 )
 	{	
 	$datetime1=new DateTime($row[3]);
+	$previousdate = new DateTime($row[3]);
+	$total_duration_sec = 1;
+	$barXtotal_dur_sec = 0;
 	}
 $current_date=new DateTime($row[3]);
 $interval = $datetime1->diff($current_date);
@@ -300,12 +302,32 @@ $interval = $datetime1->diff($current_date);
 
 	$temp= $temp->add(new DateInterval('P1D'));
 	$temp2=$temp->format('Y-m-d') ;
+	$total_duration_sec = 1 ;
+	$barXtotal_dur_sec = 0 ;
 
 	}
+$interval2 = $previousdate->diff($current_date);
+$m2=$interval2->format('%a');
+if ($m2 == 0)
+{
+# On est sur le même jour..
+$total_duration_sec = $total_duration_sec + $row[14];
+$barXtotal_dur_sec = $barXtotal_dur_sec +  $row[9]*$row[14];
+}
+else
+{
+# si on est sur un autre jour
+$total_duration_sec = $row[14];
+$barXtotal_dur_sec = $row[9]*$row[14];
+$previousdate = $current_date ;
+}
+$fmoy_day=$barXtotal_dur_sec/$total_duration_sec;
 
+$if =  number_format($fmoy_day/$fseuil,2)  ;
+$tss =  number_format((100*$total_duration_sec*$fmoy_day*$fmoy_day/$fseuil)/(3600*$fseuil),2);
 
-$atl= $atl_b+($row[8]-$atl_b)/$Tca;
-$ctl= $ctl_b +($row[8]-$ctl_b)/$Tcc;
+$atl= $atl_b+($tss-$atl_b)/$Tca;
+$ctl= $ctl_b +($tss-$ctl_b)/$Tcc;
 $tsb = number_format($ctl - $atl, 2) ;
 $atl_b=$atl ;
 $ctl_b=$ctl;
@@ -313,8 +335,8 @@ $atl2=number_format($atl, 2);
 $ctl2=number_format($ctl, 2);
 $datetime1=$current_date;
 
-$tss= number_format($row[8], 2);
-$if=number_format($row[7], 2);
+#$tss= number_format($row[8], 2);
+#$if=number_format($row[7], 2);
 $temp2=$current_date->format('Y-m-d') ;
 
 //print"<form action=\"Voir.php\" method=\"post\">";
@@ -322,7 +344,7 @@ $temp2=$current_date->format('Y-m-d') ;
 $toto=str_replace(' ','_',$row[2]);
 echo"<TR id=\"$toto\">
 <TD class=\"name\">$row[1]</TD><TD class=\"sport\">$row[2]</TD><TD class=\"date\">$row[3]</TD><TD class=\"cal\">$row[4]</TD><TD class=\"dist\">$row[5]</TD><TD class=\"deniv\">$row[13]</TD><TD class=\"duration\">$row[6]</TD><TD class=\"IF\">
-$row[7]</TD><TD class=\"TSS\">$row[8]</TD><TD class=\"Fmoy\">$row[9]</TD><TD class=\"Fmax\">$row[10]</TD><TD class=\"Vaverage\">$row[11]</TD><TD class=\"Vmaximum\">$row[12]</TD>
+$if</TD><TD class=\"TSS\">$tss</TD><TD class=\"Fmoy\">$row[9]</TD><TD class=\"Fmax\">$row[10]</TD><TD class=\"Vaverage\">$row[11]</TD><TD class=\"Vmaximum\">$row[12]</TD>
 <TD class=\"ATL\">$atl2</TD><TD class=\"CTL\">$ctl2</TD><TD class=\"TSB\">$tsb</TD>
 <TD><form action=\"Voir.php\" method=\"post\"><input type=\"hidden\" name=\"seance_id\" value=\"$row[0]\"><INPUT TYPE=\"SUBMIT\" VALUE=\"Voir  \"/></form></TD>
 
@@ -332,10 +354,11 @@ $row[7]</TD><TD class=\"TSS\">$row[8]</TD><TD class=\"Fmoy\">$row[9]</TD><TD cla
 }
 print "</tbody></TABLE></div>";
 
-mysql_free_result($result);
-mysql_free_result($result_sports);
-mysql_close($link);
+mysqli_free_result($result);
+mysqli_free_result($result_sports);
+mysqli_close($link);
 ?>
+
 <script type="text/javascript" src="../javascripts/list.min.js"></script> 
 <script type="text/javascript" >
 var options = {
