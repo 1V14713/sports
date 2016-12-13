@@ -323,8 +323,8 @@ $previousdate = $current_date ;
 }
 $fmoy_day=$barXtotal_dur_sec/$total_duration_sec;
 
-$if =  number_format($fmoy_day/$fseuil,2)  ;
-$tss =  number_format((100*$total_duration_sec*$fmoy_day*$fmoy_day/$fseuil)/(3600*$fseuil),2);
+$if =  $fmoy_day/$fseuil  ;
+$tss = (100*$total_duration_sec*$fmoy_day*$fmoy_day/$fseuil)/(3600*$fseuil);
 
 $atl= $atl_b+($tss-$atl_b)/$Tca;
 $ctl= $ctl_b +($tss-$ctl_b)/$Tcc;
