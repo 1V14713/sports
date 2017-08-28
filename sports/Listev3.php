@@ -65,8 +65,8 @@ if (isset($_POST['end']))
 
 $link=connect_db($db_host, $db_username, $db_password, $db_name);
 $query_settings = "SELECT * FROM `perf_setting` WHERE user='mathieugravil';";
-$result_settings = mysql_query($query_settings) or die("La requete $query_settings a echouee");
-$settings=mysql_fetch_row ($result_settings );
+$result_settings = mysqli_query($link,$query_settings) or die("La requete $query_settings a echouee");
+$settings=mysqli_fetch_row ($result_settings );
 
 $fseuil=$settings[1] ;
 $Tca=$settings[2];
@@ -77,13 +77,13 @@ $ctl_b=$settings[5];
 
 $query_sports = "select sport_id , sport_name from sport_type order by sport_id desc; ";
 $sports = array();	
-$result_sports = mysql_query($query_sports) or die("La requete $query_sports a echouee");
+$result_sports = mysqli_query($link,$query_sports) or die("La requete $query_sports a echouee");
 if(isset($_POST['sport']) && !empty($_POST['sport'])){
 	$sports=$_POST['sport'];
 	$all_selected=0;
 }
 else  {
-	while ($row_sport=mysql_fetch_array($result_sports, MYSQL_NUM) )
+	while ($row_sport=mysqli_fetch_array($result_sports, MYSQL_NUM) )
 	{
 		$sports[] = $row_sport[0];
 	}
@@ -115,9 +115,9 @@ printf("<table border=2>\n
 </TR>\n",$start ,$end);
 print "<TR><TD>Selectione un ou plusieurs sports : </TD><TD><select name=\"sport[]\" multiple>";
 
-$result_sports = mysql_query($query_sports) or die("La requete $query_sports a echouee");
+$result_sports = mysqli_query($link,$query_sports) or die("La requete $query_sports a echouee");
 
-while ($row_sports = mysql_fetch_array($result_sports, MYSQL_NUM))
+while ($row_sports = mysqli_fetch_array($result_sports, MYSQL_NUM))
 {
 	if ($all_selected == 0)
 	{
@@ -140,8 +140,8 @@ print "	<TD><INPUT TYPE=\"SUBMIT\" VALUE=\"Report\"/></form></TD><TD><form actio
 <input type=\"hidden\" name=\"start\" value=\"$start\">
 <input type=\"hidden\" name=\"end\" value=\"$end\">";
 
-$result_sports = mysql_query($query_sports) or die("La requete $query_sports a echouee");
-while ($row_sports = mysql_fetch_array($result_sports, MYSQL_NUM))
+$result_sports = mysqli_query($link,$query_sports) or die("La requete $query_sports a echouee");
+while ($row_sports = mysqli_fetch_array($result_sports, MYSQL_NUM))
 {
 	if ($all_selected == 0)
 	{
@@ -271,13 +271,13 @@ print "
 		</TR></thead>
 <tbody class=\"list\">";
 
-$result = mysql_query($query) or die("La requete  $query a echouee");
+$result = mysqli_query($link,$query) or die("La requete  $query a echouee");
 $num_rows = mysql_num_rows($result);
 echo "$num_rows Rows\n";
 		
 $k=1;	
 
-while ($row = mysql_fetch_array($result, MYSQL_NUM))
+while ($row = mysqli_fetch_array($result, MYSQL_NUM))
 {
 	if ($k == 1 )
 	{	
@@ -354,9 +354,9 @@ $if</TD><TD class=\"TSS\">$tss</TD><TD class=\"Fmoy\">$row[9]</TD><TD class=\"Fm
 }
 print "</tbody></TABLE></div>";
 
-mysql_free_result($result);
-mysql_free_result($result_sports);
-mysql_close($link);
+mysqli_free_result($result);
+mysqli_free_result($result_sports);
+mysqli_close($link);
 ?>
 <script type="text/javascript" src="../javascripts/list.min.js"></script> 
 <script type="text/javascript" >

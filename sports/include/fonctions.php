@@ -8,8 +8,8 @@ function mysql_to_graph_multiline($dbconnect, $sqlrequest, $HEADER, $title , $na
 	{
 		$serie[$i] = new XYDataSet();
 	}
-	$result = mysql_query($sqlrequest, $dbconnect) or die("La requete $sqlrequest a echouee");
-	while($row = mysql_fetch_row($result))
+	$result = mysqli_query($dbconnect,$sqlrequest) or die("La requete $sqlrequest a echouee");
+	while($row = mysqli_fetch_row($result))
 	{
 		for ($i= 0 ; $i < count($row)-1 ; $i++)
 		{
@@ -65,8 +65,8 @@ else
 	print "<TD><b> $fields[$i] </b></TD>";
 	}
 	print "</TR>";
-	$result = mysql_query($sqlrequest, $dbconnect) or die("La requete $sqlrequest a echouee");
-	while($row = mysql_fetch_row($result))
+	$result = mysqli_query($dbconnect,$sqlrequest) or die("La requete $sqlrequest a echouee");
+	while($row = mysqli_fetch_row($result))
 	{
 		print "<TR>";
 
@@ -86,15 +86,14 @@ function backup_tables($host,$user,$pass,$name,$tables = '*')
 
 
 	$NB_ROWS_MAX=9000;
-	$link = mysql_connect($host,$user,$pass);
-	mysql_select_db($name,$link);
+	$link = mysqli_connect($host,$user,$pass,$name);
 
 	//get all of the tables
 	if($tables == '*')
 	{
 		$tables = array();
-		$result = mysql_query('SHOW TABLES');
-		while($row = mysql_fetch_row($result))
+		$result = mysqli_query($link,'SHOW TABLES');
+		while($row = mysqli_fetch_row($result))
 		{
 			$tables[] = $row[0];
 		}
@@ -107,21 +106,21 @@ function backup_tables($host,$user,$pass,$name,$tables = '*')
 	//cycle through
 	foreach($tables as $table)
 	{
-		$result = mysql_query('SELECT * FROM '.$table);
-		$num_fields = mysql_num_fields($result);
+		$result = mysqli_query($link,'SELECT * FROM '.$table);
+		$num_fields = mysqli_num_fields($result);
 
 		$return.= 'DROP TABLE '.$table.';';
-		$row2 = mysql_fetch_row(mysql_query('SHOW CREATE TABLE '.$table));
+		$row2 = mysqli_fetch_row(mysqli_query($link,'SHOW CREATE TABLE '.$table));
 		$return.= "\n\n".$row2[1].";\n\n";
-		if (mysql_num_rows($result)!= 0 )
+		if (mysqli_num_rows($result)!= 0 )
 		{
-			$nb_pack = floor(mysql_num_rows($result)/$NB_ROWS_MAX);
+			$nb_pack = floor(mysqli_num_rows($result)/$NB_ROWS_MAX);
 			$return.= 'INSERT INTO '.$table.'  (';
 			$start_of_insert='INSERT INTO '.$table.'  (';
-            		$result2 = mysql_query('SHOW COLUMNS from '.$table);
-			$num  = mysql_num_rows($result2);
+            		$result2 = mysqli_query($link,'SHOW COLUMNS from '.$table);
+			$num  = mysqli_num_rows($result2);
 			$i=1;
-			while($row = mysql_fetch_row($result2))
+			while($row = mysqli_fetch_row($result2))
 			{
 				if ($i < $num )
 				{
@@ -138,11 +137,11 @@ function backup_tables($host,$user,$pass,$name,$tables = '*')
 				}
 			}
 			$k=1;
-			while($row = mysql_fetch_row($result))
+			while($row = mysqli_fetch_row($result))
 			{
 				
 				$return.= '(';
-				if ($k <  mysql_num_rows($result))
+				if ($k <  mysqli_num_rows($result))
 				{
 				for($j=0; $j<$num_fields; $j++)
 				{
