@@ -83,7 +83,7 @@ if(isset($_POST['sport']) && !empty($_POST['sport'])){
 	$all_selected=0;
 }
 else  {
-	while ($row_sport=mysqli_fetch_array($result_sports, MYSQL_NUM) )
+	while ($row_sport=mysqli_fetch_array($result_sports, MYSQLI_NUM) )
 	{
 		$sports[] = $row_sport[0];
 	}
@@ -117,7 +117,7 @@ print "<TR><TD>Selectione un ou plusieurs sports : </TD><TD><select name=\"sport
 
 $result_sports = mysqli_query($link,$query_sports) or die("La requete $query_sports a echouee");
 
-while ($row_sports = mysqli_fetch_array($result_sports, MYSQL_NUM))
+while ($row_sports = mysqli_fetch_array($result_sports, MYSQLI_NUM))
 {
 	if ($all_selected == 0)
 	{
@@ -141,7 +141,7 @@ print "	<TD><INPUT TYPE=\"SUBMIT\" VALUE=\"Report\"/></form></TD><TD><form actio
 <input type=\"hidden\" name=\"end\" value=\"$end\">";
 
 $result_sports = mysqli_query($link,$query_sports) or die("La requete $query_sports a echouee");
-while ($row_sports = mysqli_fetch_array($result_sports, MYSQL_NUM))
+while ($row_sports = mysqli_fetch_array($result_sports, MYSQLI_NUM))
 {
 	if ($all_selected == 0)
 	{
@@ -277,7 +277,7 @@ echo "$num_rows Rows\n";
 		
 $k=1;	
 
-while ($row = mysqli_fetch_array($result, MYSQL_NUM))
+while ($row = mysqli_fetch_array($result, MYSQLI_NUM))
 {
 	if ($k == 1 )
 	{	

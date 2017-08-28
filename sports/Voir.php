@@ -49,7 +49,7 @@ if(isset($_POST['seance_id']) && !empty($_POST['seance_id']))
 	$result_seance = mysqli_query($link,$query_sport) or die("La requete seance a
  echouee");
 	
-	while ($row_seance= mysqli_fetch_array($result_seance, MYSQL_NUM))
+	while ($row_seance= mysqli_fetch_array($result_seance, MYSQLI_NUM))
 	{
 		$name = $row_seance[1];
 		$sport = $row_seance[2];
@@ -106,7 +106,7 @@ print"<TR ><TD> Sport:</TD><TD><SELECT NAME=\"sport_id\">
  echouee");
  
    
-while ($row = mysqli_fetch_array($result_sport, MYSQL_NUM))
+while ($row = mysqli_fetch_array($result_sport, MYSQLI_NUM))
          {
 if ( $row[1] == $sport )
 {
