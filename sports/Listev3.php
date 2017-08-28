@@ -66,7 +66,7 @@ if (isset($_POST['end']))
 $link=connect_db($db_host, $db_username, $db_password, $db_name);
 $query_settings = "SELECT * FROM `perf_setting` WHERE user='mathieugravil';";
 $result_settings = mysqli_query($link,$query_settings) or die("La requete $query_settings a echouee");
-$settings=mysqli_fetch_row ($result_settings, MYSQLI_NUM );
+$settings=mysqli_fetch_row ($result_settings );
 
 $fseuil=$settings[1] ;
 $Tca=$settings[2];
