@@ -46,10 +46,10 @@ if(isset($_POST['seance_id']) && !empty($_POST['seance_id']))
 	AND seance_id='$seance_id';";
 //	print $seance_id ;
 //	print $query_sport ;
-	$result_seance = mysql_query($query_sport) or die("La requete seance a
+	$result_seance = mysqli_query($link,$query_sport) or die("La requete seance a
  echouee");
 	
-	while ($row_seance= mysql_fetch_array($result_seance, MYSQL_NUM))
+	while ($row_seance= mysqli_fetch_array($result_seance, MYSQL_NUM))
 	{
 		$name = $row_seance[1];
 		$sport = $row_seance[2];
@@ -102,11 +102,11 @@ print"<TR ><TD> Sport:</TD><TD><SELECT NAME=\"sport_id\">
 
 
  $query_sport = "SELECT * FROM sport_type ORDER BY sport_name";
- $result_sport = mysql_query($query_sport) or die("La requete sport a
+ $result_sport = mysqli_query($link,$query_sport) or die("La requete sport a
  echouee");
  
    
-while ($row = mysql_fetch_array($result_sport, MYSQL_NUM))
+while ($row = mysqli_fetch_array($result_sport, MYSQL_NUM))
          {
 if ( $row[1] == $sport )
 {
@@ -175,10 +175,10 @@ print"
 // style="width:97%; font-size:0.8 em;"
 
 /* Free resultset */
- mysql_free_result($result_seance);
- mysql_free_result($result_sport);
+ mysqli_free_result($result_seance);
+ mysqli_free_result($result_sport);
  /* Closing connection */
-  mysql_close($link);
+  mysqli_close($link);
 ?>
 </div>
 </BODY>

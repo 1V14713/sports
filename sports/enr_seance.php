@@ -106,7 +106,7 @@ if ($fmoy &&  $fmax &&  $upper &&  $lower &&  $in_zone &&  $below &&  $above  &&
 //echo "date($date_parse[year],\"y\")/$date_parse[month]/$date_parse[day]";
     if ($action == 'insert' )
     {
-mysql_query("INSERT INTO seances  (`name`, `sport_id`, `date`, `calories`, `distance`, `duration`, `fat_consumption`, `above`, 
+mysqli_query($link,"INSERT INTO seances  (`name`, `sport_id`, `date`, `calories`, `distance`, `duration`, `fat_consumption`, `above`, 
    `average`, `below`, `in_zone`, `lower`, `maximum`, `upper`, `Vaverage`, `Vmaximum`,`altitude`, `link` ) 
    values('$seance_name', '$sport_id', '$date'  , '$cal' , '$dist' , '$duration' , '$fat' , '$above' ,
     '$fmoy' ,  '$below' , '$in_zone', '$lower', '$fmax' , '$upper' , '$vmoy', '$vmax' , '$altitude' , '$url' )");
@@ -118,7 +118,7 @@ mysql_query("INSERT INTO seances  (`name`, `sport_id`, `date`, `calories`, `dist
  
     }
     elseif ($action == 'update' && isset($seance_id) ) {
-    mysql_query("update seances   set name ='$seance_name' , sport_id ='$sport_id' , date = '$date' , calories = '$cal',  distance = '$dist' , 
+    mysqli_query($link,"update seances   set name ='$seance_name' , sport_id ='$sport_id' , date = '$date' , calories = '$cal',  distance = '$dist' , 
      duration ='$duration' , fat_consumption ='$fat' , above = '$above', average  =  '$fmoy', below = '$below' , in_zone = '$in_zone', 
      lower = '$lower', maximum = '$fmax', upper = '$upper', Vaverage = '$vmoy', Vmaximum = '$vmax' , altitude = '$altitude' , link = '$url'
      WHERE seance_id='$seance_id' ");	
@@ -129,10 +129,10 @@ mysql_query("INSERT INTO seances  (`name`, `sport_id`, `date`, `calories`, `dist
      WHERE seance_id = '$seance_id' </pre>" ;
     }
     elseif ( $action == 'delete'){
-	mysql_query("delete from  seances  WHERE seance_id='$seance_id' ");	
+	mysqli_query($link,"delete from  seances  WHERE seance_id='$seance_id' ");	
 	echo "delete from  seances  WHERE seance_id = '$seance_id' ";
 	}
-	mysql_close($link);
+	mysqli_close($link);
 }
 else
 {
