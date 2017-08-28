@@ -191,8 +191,7 @@ $handle = fopen('db-backup.sql','w+');
 function connect_db($db_host, $db_username, $db_password, $db_name)
 {
 
-$link = mysql_connect($db_host, $db_username, $db_password) or die('Connection au serveur [<FONT COLOR=RED>ECHEC</FONT>]<BR>');
-    mysql_select_db($db_name) or die('Connection à la base [<FONT COLOR=RED>ECHEC</FONT>]<BR>');
+$link = mysqli_connect($db_host, $db_username, $db_password,$db_name) or die('Connection au serveur [<FONT COLOR=RED>ECHEC</FONT>]<BR>');
     return $link;
 }
 
