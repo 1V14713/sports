@@ -234,8 +234,7 @@ SEC_TO_TIME(sum(TIME_TO_SEC(duration))/count(distinct(date)))as \"duration/day\"
 		AND seances.date <= date_format('$end','%Y/%m/%d')
 AND seances.date >= date_format('$start','%Y/%m/%d')
 		 AND seances.sport_id IN ($list_sports )
-GROUP BY  date_format(date, '%Y'),  date_format(date, '%M')
-ORDER BY date ;";
+GROUP BY  date_format(date, '%Y'),  date_format(date, '%M') ;";
 
 $header3[0]="Annee";
 $header3[1]="Mois"; 
