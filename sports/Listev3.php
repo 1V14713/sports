@@ -234,7 +234,8 @@ SEC_TO_TIME(sum(TIME_TO_SEC(duration))/count(distinct(date)))as \"duration/day\"
 		AND seances.date <= date_format('$end','%Y/%m/%d')
 AND seances.date >= date_format('$start','%Y/%m/%d')
 		 AND seances.sport_id IN ($list_sports )
-GROUP BY  date_format(date, '%Y'),  date_format(date, '%M') ;";
+GROUP BY  date_format(date, '%Y'),  date_format(date, '%M') 
+ORDER BY date_format(date, '%Y'),  date_format(date, '%M') ;";
 
 $header3[0]="Annee";
 $header3[1]="Mois"; 
@@ -271,7 +272,7 @@ print "
 <tbody class=\"list\">";
 
 $result = mysqli_query($link,$query) or die("La requete  $query a echouee");
-$num_rows = mysql_num_rows($result);
+$num_rows = mysqli_num_rows($result);
 echo "$num_rows Rows\n";
 		
 $k=1;	
