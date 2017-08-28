@@ -1,4 +1,0 @@
-AuthType Basic
-AuthName "Top Secret"
-AuthUserFile ${HOME}/.htpasswd
-Require valid-user
