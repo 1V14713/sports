@@ -132,7 +132,7 @@ mysqli_query($link,"INSERT INTO seances  (`name`, `sport_id`, `date`, `calories`
 	mysqli_query($link,"delete from  seances  WHERE seance_id='$seance_id' ");	
 	echo "delete from  seances  WHERE seance_id = '$seance_id' ";
 	}
-	mysql_close($link);
+	mysqli_close($link);
 }
 else
 {

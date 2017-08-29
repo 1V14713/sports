@@ -75,15 +75,15 @@ $link=connect_db($db_host, $db_username, $db_password, $db_name);
 if ($user &&  $fseuil &&  $tca &&  $tcc &&  $start  &&  $end )
 {
 
-    mysql_query("UPDATE `perf_setting` SET `user`='$old' , `fseuil`='$fseuil',`Tca`='$tca',`Tcc`='$tcc',`atl`='$atl',`ctl`='$ctl',`start`='$start',`end`='$end' WHERE user='$old';");
+    mysqli_query($link,"UPDATE `perf_setting` SET `user`='$old' , `fseuil`='$fseuil',`Tca`='$tca',`Tcc`='$tcc',`atl`='$atl',`ctl`='$ctl',`start`='$start',`end`='$end' WHERE user='$old';");
 }
 
 
 
 
 $query_settings = "SELECT * FROM `perf_setting` WHERE user='mathieugravil';";
-$result_settings = mysql_query($query_settings) or die("La requete $query_settings a echouee");
-$settings=mysql_fetch_row ($result_settings );
+$result_settings = mysqli_query($link,$query_settings) or die("La requete $query_settings a echouee");
+$settings=mysqli_fetch_row ($result_settings );
 
 print"<form action=\"Dash.php\" method=\"post\">";
 printf("<input type=\"hidden\" name=\"old\" value=\"%s\"><table >\n
@@ -102,8 +102,8 @@ print "<TR><TD>&nbsp</TD><TD><INPUT TYPE=\"SUBMIT\" VALUE=\"Report\"/></TR>";
 //
 
 
-mysql_free_result($result_settings);
-mysql_close($link);
+mysqli_free_result($result_settings);
+mysqli_close($link);
 ?>
 <div id="dashboardTarget"></div>
 
