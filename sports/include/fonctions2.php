@@ -141,7 +141,7 @@ function backup_tables($host,$user,$pass,$name,$tables = '*')
 				for($j=0; $j<$num_fields; $j++)
 				{
 					$row[$j] = addslashes($row[$j]);
-					$row[$j] = preg_replace("\n","\\n",$row[$j]);
+					$row[$j] = preg_replace("/\n/","\\n",$row[$j]);
 					if (isset($row[$j])) { $return.= '"'.$row[$j].'"' ; } else { $return.= '""'; }
 					if ($j<($num_fields-1)) { $return.= ','; }
 				}
@@ -160,7 +160,7 @@ function backup_tables($host,$user,$pass,$name,$tables = '*')
 				for($j=0; $j<$num_fields; $j++)
 				{
 					$row[$j] = addslashes($row[$j]);
-					$row[$j] = preg_replace("\n","\\n",$row[$j]);
+					$row[$j] = preg_replace("/\n/","\\n",$row[$j]);
 					if (isset($row[$j])) { $return.= '"'.$row[$j].'"' ; } else { $return.= '""'; }
 					if ($j<($num_fields-1)) { $return.= ','; }
 				}
